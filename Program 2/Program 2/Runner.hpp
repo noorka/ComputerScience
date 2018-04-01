@@ -46,7 +46,6 @@ public:
     Actor* getPlayerTwo();
     void printAction();
     string getRandom(Actor player);
-    void printMove();
     bool isDead(Actor* player);
 };
 

@@ -9,9 +9,6 @@
 #include "Ghost.hpp"
 //Will have AttackOne and Heal in vector of MoveTypes, and 100 health
 Ghost::Ghost(int health, string type){
-    this -> health = health;
-    this-> type = type;
-}
-vector <string> Ghost::getMoves(){
-    return moveTypes;
+    this->health = health;
+    this->type = type;
 }

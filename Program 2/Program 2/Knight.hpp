@@ -19,12 +19,12 @@ using namespace std;
 
 class Knight: public Actor {
 protected:
-    string type = "knight";
     vector <string> moveTypes= {"attackTwo", "heal"};//maybe battle moves
 public:
     Knight() = default;
+    ~Knight() = default;
     Knight(int health, string type);
-    vector <string> getMoves();
+    vector <string> getMoves(){return moveTypes;}
 };
 
 //Will have AttackTwo and Heal in vector of MoveTypes, and 100 health

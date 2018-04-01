@@ -14,10 +14,9 @@
 void AttackOne::execute(){
     //srand(time(NULL));
     actualDamage = rand() % 5 + 10;
-    
-    Actor().hit(actualDamage, player);
+    player->hit(actualDamage, player);
 
 }
 void AttackOne::undo(){
-    Actor().heal(actualDamage, player);
+    player->heal(actualDamage, player);
 }

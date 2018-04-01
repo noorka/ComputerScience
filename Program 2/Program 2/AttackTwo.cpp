@@ -11,10 +11,9 @@
 //Same logic as attack one
 void AttackTwo::execute(){
     actualDamage = rand() % 25;
-    
-    Actor().hit(actualDamage, player);
+    player->hit(actualDamage, player);
     
 }
 void AttackTwo::undo(){
-    Actor().heal(actualDamage, player);
+    player->heal(actualDamage, player);
 }

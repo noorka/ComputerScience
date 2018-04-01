@@ -25,7 +25,8 @@ public:
     Heal() = default;
     void execute();
     void undo();
-    virtual ~Heal() = default;
+    ~Heal() = default;
+    int getActionAmt(){return actualHeal;}
 };
 
 //Will generate a random heal amount between 10 and 15

@@ -14,9 +14,7 @@
 
 int main(int argc, const char * argv[]) {
     srand((int)time(NULL));
-    //int test = rand() % 100;
     Runner r = Runner();
-    Actor a = Actor();
     int player;
     int choice;
     do {

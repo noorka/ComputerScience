@@ -27,7 +27,8 @@ public:
     AttackTwo() = default;
     void execute();
     void undo();
-    virtual ~AttackTwo() = default;
+    ~AttackTwo() = default;
+    int getActionAmt(){return actualDamage;}
 };
 //Will generate a random damage between 0 and 25
 //Same logic as attack one

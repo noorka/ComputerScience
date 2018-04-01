@@ -9,9 +9,6 @@
 #include "Knight.hpp"
 //Will have AttackTwo and Heal in vector of MoveTypes, and 100 health
 Knight::Knight(int health, string type){
-    this -> health = health;
-    this-> type = type;
-}
-vector <string> Knight::getMoves(){
-    return moveTypes;
+    this->health = health;
+    this->type = type;
 }

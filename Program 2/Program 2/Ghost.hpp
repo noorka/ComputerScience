@@ -21,12 +21,13 @@ using namespace std;
 
 class Ghost : public Actor{
 protected:
-    vector <string> moveTypes= {"AttackOne", "Heal"};//maybe battle moves
+    vector <string> moveTypes = {"AttackOne", "Heal"};//maybe battle moves
     
 public:
     Ghost() = default;
+    ~Ghost() = default;
     Ghost(int health, string type);
-    vector <string> getMoves();
+    vector <string> getMoves(){return moveTypes;}
 };
 
 //Will have AttackOne and Heal in vector of MoveTypes, and 100 health

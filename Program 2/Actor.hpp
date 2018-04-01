@@ -14,6 +14,7 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
+#include <iostream>
 
 
 using namespace std;
@@ -24,20 +25,18 @@ class Actor{
 protected:
     string type;
     int health;
-    //vector <ChoiceType>;
+    vector <string> moveTypes;
 public:
     Actor() = default;
-    //virtual ~Actor() = default;
-    Actor(int health, string type); //construct actor
+    virtual ~Actor() = default;
+    vector <string> virtual getMoves();
+    
+    Actor(int health, string type);
     void doMove(MoveManager* mgr, string ChoiceType, Actor* player);
-    void hit(int damage, Actor* myPlayer);	//public method to hit THIS actor with damage
-    void heal(int amount, Actor* myPlayer);	//public method to heal this actor with an amount
-    //vector <string> virtual getMoves();	//vector of MoveTypes
-    vector <string> getMoves();	//vector of MoveTypes
+    void hit(int damage, Actor* myPlayer);
+    void heal(int amount, Actor* myPlayer);
     string getType();
     int getHealth();
-    
-
 };
 
 

@@ -9,9 +9,6 @@
 #include "Warrior.hpp"
 //Will have AttackOne and AttackTwo in vector of MoveTypes, and 100 health
 Warrior::Warrior(int health, string type){
-    this -> health = health;
-    this-> type = type;
-}
-vector <string> Warrior::getMoves(){
-    return moveTypes;
+    this->health = health;
+    this->type = type;
 }

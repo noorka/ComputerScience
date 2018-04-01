@@ -26,8 +26,7 @@ public:
     void virtual undo()=0;
     virtual ~BattleMove() = default;
     void setPlayer(Actor* pawn);
-
-    
+    int virtual getActionAmt()=0;
 };
 
 #endif /* BattleMove_hpp */

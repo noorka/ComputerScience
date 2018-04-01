@@ -104,16 +104,11 @@ void Runner::printAction(){
     printf("[Player: %s, (%i)] [Opponent: %s, (%i)]\n", playerOne.getType().c_str(), playerOne.getHealth(), playerTwo.getType().c_str(), playerTwo.getHealth());
 }
 string Runner::getRandom(Actor player){
-    //moveVec = player.getMoves();
-    vector <string> moveVec = {"attackOne"};
+    vector <string> moveVec = player.getMoves();
+    //vector <string> moveVec = {"attackOne"};
     moveTypeIndex = rand() % moveVec.size();
     moveType = moveVec.at(moveTypeIndex);
     return moveType;
-}
-void Runner::printMove(){
-    
-    printf(0);
-    //printf("[Player: %s, (%i)] [Opponent: %s, (%i)]", playerOne.getType().c_str(), playerOne.getHealth(), playerTwo.getType().c_str(), playerTwo.getHealth());
 }
 Actor* Runner::getPlayerOne(){
     return &playerOne;

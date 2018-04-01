@@ -27,7 +27,8 @@ public:
     AttackOne() = default;
     void execute();
     void undo();
-    virtual ~AttackOne() = default;
+    ~AttackOne() = default;
+    int getActionAmt(){return actualDamage;}
     
 };
 

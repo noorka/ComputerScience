@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <string>
 #include <stdlib.h>
+#include <iostream>
 #include "Stack.hpp"
 #include "BattleMove.hpp"
 #include "AttackOne.hpp"
@@ -31,6 +32,7 @@ public:
     void doMove(MoveType moveType, Actor* actionPlayer);
     void undoLastMove();
     ~MoveManager();
+    void printMove(BattleMove* move, Actor* actionPlayer);
 };
 
 

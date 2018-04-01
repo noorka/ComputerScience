@@ -29,6 +29,7 @@ void MoveManager::doMove(MoveType moveType, Actor* actionPlayer){
     }
     move->setPlayer(actionPlayer);
     move->execute();
+    printMove(move, actionPlayer);
     stack.push(move);
 }
 void MoveManager::undoLastMove(){
@@ -50,5 +51,17 @@ MoveManager::~MoveManager(){
     while(!stack.isEmpty()){
         delete stack.tipTop();
         stack.pop();
+    }
+}
+void MoveManager::printMove(BattleMove* move, Actor* actionPlayer){
+    string moveName = typeid(move).name();
+    if(moveName.find("One") > -1){
+        cout << actionPlayer->getType() << ", (" << actionPlayer->getHealth() << ") is hit with" << move->getActionAmt() << " damage.\n";
+    }
+    else if(moveName.find("Two")> -1){
+       cout << actionPlayer->getType() << ", (" << actionPlayer->getHealth() << ") is hit with" << move->getActionAmt() << " damage.\n";
+    }
+    else if(moveName.find("Heal") > -1){
+        cout << actionPlayer->getType() << ", (" << actionPlayer->getHealth() << ") is healed by" << move->getActionAmt() << " hp.\n";
     }
 }
