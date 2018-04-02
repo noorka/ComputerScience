@@ -21,7 +21,7 @@ using namespace std;
 
 class Ghost : public Actor{
 protected:
-    vector <string> moveTypes = {"AttackOne", "Heal"};
+    vector <string> moveTypes = {"attackOne", "heal"};
     
 public:
     Ghost() = default;

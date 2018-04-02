@@ -29,7 +29,7 @@ protected:
 public:
     Actor() = default;
     virtual ~Actor() = default;
-    vector <string> virtual getMoves();
+    vector <string> virtual getMoves(){return {"empty"};};
     
     Actor(int health, string type);
     void doMove(MoveManager* mgr, string ChoiceType, Actor* player);

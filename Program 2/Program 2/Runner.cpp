@@ -34,18 +34,16 @@ int moveTypeIndex;
 int Runner::menuChoice (int pick){
     switch(pick){
         case 1:
-            //moveType= playerOne.getRandom();
             //player 1 does something to player 2
-            playerOne.doMove(&mgr, getRandom(&playerOne), &playerTwo);
+            playerOne->doMove(&mgr, getRandom(playerOne), playerTwo);
             break;
         case 2:
             //player 2 does something to player 1
-            playerTwo.doMove(&mgr, getRandom(&playerTwo), &playerOne);
+            playerTwo->doMove(&mgr, getRandom(playerTwo), playerOne);
             break;
         case 3:
             // this is the undo option
             mgr.undoLastMove();
-            //no moves on stack
             break;
         default:
             cout << "Not a menu option. Try again.";
@@ -56,35 +54,46 @@ int Runner::menuChoice (int pick){
 }
  
 int Runner::inputOne(int pers){
+    Ghost tmpGhost;
+    Knight tmpKnight;
+    Warrior tmpWarrior;
     switch(pers){
         case 1:
-            setPlayerOne(Ghost(100, "Ghost"));
+            tmpGhost = Ghost(100, "Ghost");
+            playerOne = &tmpGhost;
             break;
         case 2:
-            setPlayerOne(Knight(100, "Knight"));
+            tmpKnight = Knight(100, "Knight");
+            playerOne = &tmpKnight;
             break;
         case 3:
-            setPlayerOne(Warrior(100, "Warrior"));
+            tmpWarrior = Warrior(100, "Warrior");
+            playerOne = &tmpWarrior;
             break;
         default:
             cout << "Not a menu option. Try again.\n";
             return 22;
             break;
     }
-    //BattleMove.setSelf(playerOne);
     return 0;
 }
 
 int Runner::inputTwo(int pers){
+    Ghost tmpGhost2;
+    Knight tmpKnight2;
+    Warrior tmpWarrior2;
     switch(pers){
         case 1:
-            setPlayerTwo(Ghost(100, "Ghost"));
+            tmpGhost2 = Ghost(100, "Ghost");
+            playerTwo = &tmpGhost2;
             break;
         case 2:
-            setPlayerTwo(Knight(100, "Knight"));
+            tmpKnight2 = Knight(100, "Knight");
+            playerTwo = &tmpKnight2;
             break;
         case 3:
-            setPlayerTwo(Warrior(100, "Warrior"));
+            tmpWarrior2 = Warrior(100, "Warrior");
+            playerTwo = &tmpWarrior2;
             break;
         default:
             cout << "Not a menu option. Try again.\n";
@@ -94,36 +103,26 @@ int Runner::inputTwo(int pers){
     return 0;
 }
 
-void Runner::setPlayerOne (Actor actor){
-    playerOne = actor;
-}
-void Runner::setPlayerTwo (Actor actor){
-    playerTwo = actor;
-}
 void Runner::printAction(){
-    printf("[Player: %s, (%i)] [Opponent: %s, (%i)]\n", playerOne.getType().c_str(), playerOne.getHealth(), playerTwo.getType().c_str(), playerTwo.getHealth());
+    printf("[Player: %s, (%i)] [Opponent: %s, (%i)]\n", playerOne->getType().c_str(), playerOne->getHealth(), playerTwo->getType().c_str(), playerTwo->getHealth());
 }
 string Runner::getRandom(Actor* player){
-    vector <string> moveVec = player->getMoves();
-    //vector <string> moveVec = {"attackOne"};
+    moveVec = player->getMoves();
     moveTypeIndex = rand() % moveVec.size();
     moveType = moveVec.at(moveTypeIndex);
     return moveType;
 }
 Actor* Runner::getPlayerOne(){
-    return &playerOne;
+    return playerOne;
 }
 Actor* Runner::getPlayerTwo(){
-    return &playerTwo;
+    return playerTwo;
 }
 bool Runner::isDead(Actor* player){
-    if (player->getHealth() <= 0){return true;}
+    if (player != NULL && player->getHealth() <= 0){return true;}
     else{
         return false;
     }
 }
-//fix constructor for actors
-//random is hard coded to attackOne in runner-- try with all the things -- also try to fix
-//undo???
-//try to keep it sucessfully compiling 
+
 

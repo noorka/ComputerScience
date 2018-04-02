@@ -28,8 +28,8 @@ using namespace std;
 
 class Runner {
 private:
-    Actor playerOne;
-    Actor playerTwo;
+    Actor* playerOne;
+    Actor* playerTwo;
     MoveManager mgr;
     
 public:
