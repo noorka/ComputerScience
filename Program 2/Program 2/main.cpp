@@ -1,10 +1,7 @@
 //
 //  main.cpp
 //  Program 2
-//
-//  Created by Anna Kroon on 3/19/18.
-//  Copyright © 2018 Anna Kroon. All rights reserved.
-//
+
 
 #include <iostream>
 #include <time.h>
@@ -36,11 +33,11 @@ int main(int argc, const char * argv[]) {
         r.printAction();
     }
     if(r.isDead(r.getPlayerOne()) == true){
-        cout << "\nPlayer (" << r.getPlayerOne()->getType() << ")is dead.\n";
+        cout << "\nPlayer (" << r.getPlayerOne()->getType() << ") is dead.\n";
         cout << "Game Over\n";
     }
        else if(r.isDead(r.getPlayerTwo()) == true){
-           cout << "\nOpponent (" << r.getPlayerTwo()->getType() << ")is dead.\n";
+           cout << "\nOpponent (" << r.getPlayerTwo()->getType() << ") is dead.\n";
            cout << "Game Over\n";
        }
     return 0;

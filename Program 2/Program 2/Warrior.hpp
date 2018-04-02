@@ -1,10 +1,7 @@
 //
 //  Warrior.hpp
 //  Program 2
-//
-//  Created by Anna Kroon on 3/19/18.
-//  Copyright © 2018 Anna Kroon. All rights reserved.
-//
+
 
 #ifndef Warrior_hpp
 #define Warrior_hpp
@@ -20,7 +17,7 @@ using namespace std;
 
 class Warrior: public Actor {
 protected:
-    vector <string> moveTypes= {"attackOne", "attackTwo"};//maybe battle moves
+    vector <string> moveTypes= {"attackOne", "attackTwo"};
 public:
     Warrior() = default;
     ~Warrior() = default;
@@ -28,6 +25,5 @@ public:
     vector <string> getMoves(){return moveTypes;}
 };
 
-//Will have AttackOne and AttackTwo in vector of MoveTypes, and 100 health
 
 #endif /* Warrior_hpp */

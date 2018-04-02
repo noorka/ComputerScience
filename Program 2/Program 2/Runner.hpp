@@ -40,8 +40,6 @@ public:
     int menuChoice(int pick);
     int inputOne(int pers);
     int inputTwo(int pers);
-    void setPlayerOne(Actor actor);
-    void setPlayerTwo(Actor actor);
     Actor* getPlayerOne();
     Actor* getPlayerTwo();
     void printAction();
@@ -49,8 +47,5 @@ public:
     bool isDead(Actor* player);
 };
 
-/*
- This will be the class to run the battle. First it will prompt the user for a choice of player 1 and player 2. Then it will allow the user to select one of three choices mentioned in the first sectio. After each choice, If it is a move, select a random move from the actor's list of moves and DoMove with it (passing in the movemanager to take care of it). If the choice is an undo, invoke the MoveManager's UndoLastMove() method. Make sure to check for a stackEmpty exception. After a move print the state of each character.
- */
 
 #endif /* Runner_hpp */

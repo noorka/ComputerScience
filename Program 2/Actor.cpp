@@ -1,20 +1,11 @@
 //
 //  Actor.cpp
 //  Program 2
-//
-//  Created by Anna Kroon on 3/19/18.
-//  Copyright © 2018 Anna Kroon. All rights reserved.
-//
+
 
 #include "Actor.hpp"
 #include "MoveManager.hpp"
 
-/*
- Actor::Actor(int health, string type){
- this -> health = health;
- this-> type = type;
- }
- */
 void Actor::hit(int damage, Actor* myPlayer){
     int currentHealth = myPlayer->health;
     int newHealth = currentHealth - damage;
@@ -59,8 +50,4 @@ int Actor::getHealth(){
     return health;
 }
 
-/*vector <string> Actor::getMoves() {
- vector<string> blah = {"attackOneBlah"};
- return blah;
- }*/
 

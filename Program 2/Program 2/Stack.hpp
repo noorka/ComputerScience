@@ -1,10 +1,7 @@
 //
 //  Stack.hpp
 //  Program 2
-//
-//  Created by Anna Kroon on 3/20/18.
-//  Copyright © 2018 Anna Kroon. All rights reserved.
-//
+
 
 #ifndef Stack_hpp
 #define Stack_hpp

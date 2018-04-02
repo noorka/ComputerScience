@@ -1,10 +1,7 @@
 //
 //  Actor.hpp
 //  Program 2
-//
-//  Created by Anna Kroon on 3/19/18.
-//  Copyright © 2018 Anna Kroon. All rights reserved.
-//
+
 
 #ifndef Actor_hpp
 #define Actor_hpp
@@ -25,11 +22,10 @@ class Actor{
 protected:
     string type;
     int health;
-    vector <string> moveTypes;
 public:
     Actor() = default;
     virtual ~Actor() = default;
-    vector <string> virtual getMoves(){return {"empty"};};
+    vector <string> virtual getMoves(){return {"empty"};}
     
     Actor(int health, string type);
     void doMove(MoveManager* mgr, string ChoiceType, Actor* player);

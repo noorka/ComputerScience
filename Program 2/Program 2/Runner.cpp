@@ -1,17 +1,10 @@
 //
 //  Runner.cpp
 //  Program 2
-//
-//  Created by Anna Kroon on 3/19/18.
-//  Copyright © 2018 Anna Kroon. All rights reserved.
-//
+
 
 #include "Runner.hpp"
-/* 
- This will be the class to run the battle. First it will prompt the user for a choice of player 1 and player 2. Then it will allow the user to select one of three choices mentioned in the first sectio. After each choice, If it is a move, select a random move from the actor's list of moves and DoMove with it (passing in the movemanager to take care of it). If the choice is an undo, invoke the MoveManager's UndoLastMove() method. Make sure to check for a stackEmpty exception. After a move print the state of each character.
- */
 
-// Constructor
 Runner::Runner(){
     mgr = MoveManager();
 }
@@ -52,11 +45,10 @@ int Runner::menuChoice (int pick){
     }
     return 0;
 }
- 
+Ghost tmpGhost;
+Knight tmpKnight;
+Warrior tmpWarrior;
 int Runner::inputOne(int pers){
-    Ghost tmpGhost;
-    Knight tmpKnight;
-    Warrior tmpWarrior;
     switch(pers){
         case 1:
             tmpGhost = Ghost(100, "Ghost");
@@ -77,11 +69,10 @@ int Runner::inputOne(int pers){
     }
     return 0;
 }
-
+Ghost tmpGhost2;
+Knight tmpKnight2;
+Warrior tmpWarrior2;
 int Runner::inputTwo(int pers){
-    Ghost tmpGhost2;
-    Knight tmpKnight2;
-    Warrior tmpWarrior2;
     switch(pers){
         case 1:
             tmpGhost2 = Ghost(100, "Ghost");

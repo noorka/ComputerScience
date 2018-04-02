@@ -1,10 +1,7 @@
 //
 //  MoveManager.hpp
 //  Program 2
-//
-//  Created by Anna Kroon on 3/19/18.
-//  Copyright © 2018 Anna Kroon. All rights reserved.
-//
+
 
 #ifndef MoveManager_hpp
 #define MoveManager_hpp
@@ -32,7 +29,7 @@ public:
     void doMove(MoveType moveType, Actor* actionPlayer);
     void undoLastMove();
     ~MoveManager();
-    void printMove(BattleMove* move, Actor* actionPlayer);
+    void printMove(BattleMove* move, Actor* actionPlayer, MoveType moveType);
 };
 
 

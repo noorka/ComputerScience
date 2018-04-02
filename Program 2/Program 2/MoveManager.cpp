@@ -1,18 +1,10 @@
 //
 //  MoveManager.cpp
 //  Program 2
-//
-//  Created by Anna Kroon on 3/19/18.
-//  Copyright © 2018 Anna Kroon. All rights reserved.
-//
+
 
 #include "MoveManager.hpp"
 
-
-/*
- Analogous to our CommandManager class. Will hold on to a stack (use the template implementation of stack from the lecture code on Templates) of BattleMove*'s and will be referenced by every actor. Whenever an actor performs a move, it will go through the MoveManager's method so that history is recorded on the stack.
- Move manager will have DoMove() and UndoLastMove() methods defined, a constructor to initialize a stack, as well as a destructor to delete all the BattleMove*'s still in the stack. A MoveManager's DoMove will
- */
 
 void MoveManager::doMove(MoveType moveType, Actor* actionPlayer){
     BattleMove* move;
@@ -29,8 +21,12 @@ void MoveManager::doMove(MoveType moveType, Actor* actionPlayer){
     }
     move->setPlayer(actionPlayer);
     move->execute();
-    printMove(move, actionPlayer);
-    stack.push(move);
+    printMove(move, actionPlayer, moveType);
+    try {
+        stack.push(move);
+    } catch (StackFullException sfe) {
+        cout << "Move will not be undoable, stack is full.\n";
+    }
 }
 void MoveManager::undoLastMove(){
     if(!stack.isEmpty()){
@@ -53,15 +49,16 @@ MoveManager::~MoveManager(){
         stack.pop();
     }
 }
-void MoveManager::printMove(BattleMove* move, Actor* actionPlayer){
-    string moveName = typeid(move).name();
-    if(moveName.find("One") > -1){
-        cout << actionPlayer->getType() << ", (" << actionPlayer->getHealth() << ") is hit with" << move->getActionAmt() << " damage.\n";
-    }
-    else if(moveName.find("Two")> -1){
-       cout << actionPlayer->getType() << ", (" << actionPlayer->getHealth() << ") is hit with" << move->getActionAmt() << " damage.\n";
-    }
-    else if(moveName.find("Heal") > -1){
-        cout << actionPlayer->getType() << ", (" << actionPlayer->getHealth() << ") is healed by" << move->getActionAmt() << " hp.\n";
+void MoveManager::printMove(BattleMove* move, Actor* actionPlayer, MoveType moveType){
+    switch(moveType){
+        case MoveType::attackOne:
+            cout << actionPlayer->getType() << ", (" << actionPlayer->getHealth() << ") is hit with " << move->getActionAmt() << " damage.\n";
+            break;
+        case MoveType::attackTwo:
+            cout << actionPlayer->getType() << ", (" << actionPlayer->getHealth() << ") is hit with " << move->getActionAmt() << " damage.\n";
+            break;
+        case MoveType::heal:
+            cout << actionPlayer->getType() << ", (" << actionPlayer->getHealth() << ") is healed by " << move->getActionAmt() << " hp.\n";
+            break;
     }
 }
