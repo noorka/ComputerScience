@@ -29,7 +29,7 @@ public:
     Ghost(int health, string type);
     vector <string> getMoves(){return moveTypes;}
 };
-//hello
+
 //Will have AttackOne and Heal in vector of MoveTypes, and 100 health
 
 #endif /* Ghost_hpp */

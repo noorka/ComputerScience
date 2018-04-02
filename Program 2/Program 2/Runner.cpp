@@ -36,11 +36,11 @@ int Runner::menuChoice (int pick){
         case 1:
             //moveType= playerOne.getRandom();
             //player 1 does something to player 2
-            playerOne.doMove(&mgr, getRandom(playerOne), &playerTwo);
+            playerOne.doMove(&mgr, getRandom(&playerOne), &playerTwo);
             break;
         case 2:
             //player 2 does something to player 1
-            playerTwo.doMove(&mgr, getRandom(playerTwo), &playerOne);
+            playerTwo.doMove(&mgr, getRandom(&playerTwo), &playerOne);
             break;
         case 3:
             // this is the undo option
@@ -103,8 +103,8 @@ void Runner::setPlayerTwo (Actor actor){
 void Runner::printAction(){
     printf("[Player: %s, (%i)] [Opponent: %s, (%i)]\n", playerOne.getType().c_str(), playerOne.getHealth(), playerTwo.getType().c_str(), playerTwo.getHealth());
 }
-string Runner::getRandom(Actor player){
-    vector <string> moveVec = player.getMoves();
+string Runner::getRandom(Actor* player){
+    vector <string> moveVec = player->getMoves();
     //vector <string> moveVec = {"attackOne"};
     moveTypeIndex = rand() % moveVec.size();
     moveType = moveVec.at(moveTypeIndex);
