@@ -29,7 +29,7 @@ public class RoboGUI extends Application{
 		sn.setFill(Color.DARKGRAY);
 		st1.setTitle("RoboTicket");
 		line2.setFont(f1);
-		line2.setFill(Color.LIMEGREEN);
+		line2.setFill(Color.GREEN);
 		line2.setVisible(false);
 		exButton.setLayoutX(230);
 		exButton.setLayoutY(100);
