@@ -25,16 +25,8 @@ public class RoboTicket {
 	FileInputStream fileIS = null;
 	Scanner sck = new Scanner(System.in);
 	File file = new File("database.txt");
-	User currentUser;
+	//User currentUser;
 
-	/**
-	 * This function scans in data from the file. If there is data in the file, it takes the serialized information and 
-	 * creates a new User object that is then added to the ArrayList of Users. If there is not a data file then the 
-	 * function creates a new User as the owner of the program. When the file is done reading in, it closes the 
-	 * FileInputStream before wiping the file and opening the FileOutputStream.
-	 * @param none
-	 * @return none
-	 */
 	public Integer fileScan(){
 		Integer newIDIn = null;
 		Integer returnVal = -1;
@@ -55,8 +47,7 @@ public class RoboTicket {
 			returnVal = 1;
 		}
 		catch(EOFException eof){
-			if(!userList.isEmpty()) currentUser = userList.get(0);
-			returnVal= 2;
+			if(!userList.isEmpty()) returnVal= 2;
 		}
 		catch(Exception d){
 			//catching everything
@@ -70,14 +61,6 @@ public class RoboTicket {
 			catch(IOException ie){
 				System.out.println("Cannot close input reader.");
 			}
-		}
-		try{
-			fileOS = new FileOutputStream(file);             
-			out = new ObjectOutputStream(fileOS);
-		}
-		catch(Exception e){
-			System.out.println("Issue with file.");
-			returnVal = -1;
 		}
 		return returnVal;
 	}
@@ -138,19 +121,7 @@ public class RoboTicket {
 			endGracefully();
 		}
 	}*/
-	/**
-	 * This function prints all the menu options.
-	 * @param none
-	 * @return none
-	 */
-	public void printMenu(){
-		System.out.println("0. Exit program\n1. Log In\n2. Enter Users\n3. List Users\n4. Change User Data\n5. Close Account\n6. Buy Tickets");
-	}
-	/**
-	 * This function lists the users by ID number, username, name, isUser, years membership, and paid to date.
-	 * @param ArrayList
-	 * @return none
-	 */
+	
 	private void listUsers(ArrayList <User> myList){
 		String titles = "UserID\tUsername       Name                   Is User  Member Years    Paid to Date";
 		//need to display id, login name, isUser, get years, paidToDate
@@ -163,7 +134,7 @@ public class RoboTicket {
 	}
 
 	protected User newUser(String username, String name, String password, String paymentInfo, Date birthday){ 
-		User myUser = new User(username, name, paymentInfo, password, birthday);
+		User myUser = new User(username, name, password,paymentInfo, birthday);
 		userList.add(myUser);
 		return myUser;
 	}
@@ -180,6 +151,13 @@ public class RoboTicket {
 
 	public void endGracefully(){
 		System.out.println("Thank you for using RoboTicket by Anna Kroon.");
+		try{
+			fileOS = new FileOutputStream(file);             
+			out = new ObjectOutputStream(fileOS);
+		}
+		catch(Exception e){
+			System.out.println("Issue with file.");
+		}
 		try {
 			out.writeObject((Integer)User.getNextID());
 		} catch (IOException e1) {
@@ -193,7 +171,7 @@ public class RoboTicket {
 			}
 		}
 		try {
-			out.close();
+			//out.close();
 			fileOS.close();
 		} catch (IOException e) {
 			e.printStackTrace();
