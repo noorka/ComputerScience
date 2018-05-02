@@ -2,6 +2,7 @@ package amk.java.roboticket;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import amk.java.roboticket.User;
 import javafx.application.Application;
@@ -15,7 +16,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.HBox;
 //import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -77,7 +81,7 @@ public class RoboGUI extends Application{
 
 	Pane pane5 = new Pane();
 	Scene userEdit = new Scene(pane5, 300,300);
-	
+
 
 	Pane pane6 = new Pane();
 	Scene ownerEdit = new Scene(pane6, 300,300);
@@ -95,26 +99,56 @@ public class RoboGUI extends Application{
 
 	Pane pane7 = new Pane();
 	Scene ticketMenu = new Scene(pane7, 300,300);
+	ComboBox eventPicker = new ComboBox();
+	Button eventPick = new Button ("Select Event");
 
 	Pane pane8 = new Pane();
 	Scene listMenu = new Scene(pane8, 300,300);
-	
 	ListView  listUs = new ListView();
 
 	Pane pane9 = new Pane();
 	Scene errorPg = new Scene(pane9,300,300);
 	Text err = new Text("An error had occured.");
-	
+
+	//filling the observable list with strings
 	public ObservableList<String> fillOL(){
 		ObservableList<String> i = null;
 		for(User user:rt.userList){
 			String nowUserStr = user.toString();
-		i.addAll(nowUserStr);
+			i.addAll(nowUserStr);
 		}
 		return i;
 	}
-
-
+	//buying a ticket
+	public void buyTicket(){
+		//List<String> eventOpt = new ObservableList<String>();
+				//eventOpt.addAll("concert","theatre","sport");
+		eventPick.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				String chosenOne = (String) eventPicker.getValue();
+				if(chosenOne == "concert"){
+					ToggleGroup concertAges = new ToggleGroup();
+					//HBox boxyBox = new HBox();
+					RadioButton concertKid = new RadioButton("Child: $75");
+					RadioButton concertAdult = new RadioButton("Adult: $150");
+					RadioButton concertSr = new RadioButton("Senior: $112.50");
+					concertKid.setToggleGroup(concertAges);
+					concertAdult.setToggleGroup(concertAges);
+					concertSr.setToggleGroup(concertAges);
+					Pane buttonPane = new Pane();
+					buttonPane.getChildren().addAll(concertKid, concertAdult, concertSr);
+					//how do I get these buttons to show up nicely in a little pane and have them all do the right things when selected?
+				}
+				else if(chosenOne == "sport"){
+					
+				}
+				else{
+					
+				}
+			}
+		});
+	}
+	// taking in an input file and changing the scene
 	public Scene fileIn(){
 		switch(rt.fileScan()){
 		case 1:
@@ -131,7 +165,7 @@ public class RoboGUI extends Application{
 			//break;
 		}
 	}
-	
+	//putting all the stuff together to look pretty
 	public void buildGUI (){
 		st1.setTitle("RoboTicket");
 
@@ -175,7 +209,7 @@ public class RoboGUI extends Application{
 		secretPass.setLayoutY(80);
 		birth.setLayoutY(110);
 		addThis.setLayoutY(150);
-		
+
 		//ListView
 		selectUser.setLayoutY(10);
 		selected.setLayoutY(20);
@@ -188,20 +222,22 @@ public class RoboGUI extends Application{
 		currentDateJoin.setLayoutY(110);
 		newDateJoin.setLayoutY(120);
 		ownerEdited.setLayoutY(150);
-		
-		//listUs.setItems(listoUsers);
-		
-		
 
+		//listUs.setItems(listoUsers);
+
+
+		//adding everything to the panes 
 		pane1.getChildren().addAll(line1, logInBut, line2, logInName, logInPass);
 		pane2.getChildren().addAll(name, userName, secretPass, birth, addThis );
 		pane3.getChildren().addAll(logOut, editProfile, orderTickets);
 		pane4.getChildren().addAll(logOut, addMore, listAll, ownEdit);
 		pane6.getChildren().addAll(currentName, newName, currentUsername, newUsername, currentTotPay, newTotPay, 
 				currentDateJoin, newDateJoin, ownerEdited, selectUser, selected);
+		pane7.getChildren().addAll(eventPicker, eventPick);
 		pane8.getChildren().add(listUs);
 		pane9.getChildren().add(err);
 	}
+	
 	public void start (Stage st1){
 		buildGUI();
 		orderTickets.setOnAction(new EventHandler<ActionEvent>(){
@@ -227,9 +263,8 @@ public class RoboGUI extends Application{
 			}
 		});
 		ownEdit.setOnAction(new EventHandler<ActionEvent>(){
-			//how 
 			//need to take a selected user and pass the reference to the next scene...
-			
+
 			@Override public void handle(ActionEvent e){
 				ObservableList<String> myList = fillOL();
 				selectUser.setItems(myList);
@@ -245,12 +280,12 @@ public class RoboGUI extends Application{
 		});
 		ownerEdited.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
-				
+
 			}
 		});
 		selected.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
-				
+
 			}
 		});
 
@@ -303,7 +338,7 @@ public class RoboGUI extends Application{
 				secretPass.clear();
 				birth.clear();
 				//invalidUsername.isVisible(false);
-				
+
 				st1.setScene(ownerMenu);
 				//event
 			}
