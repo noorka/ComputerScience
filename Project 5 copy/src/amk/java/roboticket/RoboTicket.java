@@ -24,7 +24,7 @@ public class RoboTicket {
 	ObjectInputStream in = null;
 	FileInputStream fileIS = null;
 	Scanner sck = new Scanner(System.in);
-	File file = new File("database.txt");
+	File file = new File("database.dat");
 	//User currentUser;
 
 	public Integer fileScan(){

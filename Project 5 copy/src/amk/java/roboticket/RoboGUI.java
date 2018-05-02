@@ -1,6 +1,7 @@
 package amk.java.roboticket;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,48 +38,66 @@ public class RoboGUI extends Application{
 	RoboTicket rt = new RoboTicket();
 	User currentUser;
 	Button logOut = new Button ("Log Out");
-	Button back = new Button ("Back");
+	//Button back1 = new Button ("Back");
 	ObservableList<User> listoUsers = null;
 
 	Font f1 = Font.font ("Comic Sans", FontWeight.NORMAL, FontPosture.REGULAR, 20);
 
 
 	Pane pane1 = new Pane();
-	Scene welcomeSn = new Scene(pane1, 600,300);
+	Scene welcomeSn = new Scene(pane1, 400,300);
 	Text line1 = new Text (70, 60, "Welcome to RoboTicket by Anna Kroon");
 	Text line2 = new Text (70, 80, "Please enter your username and password.");
-	TextField logInName = new TextField("Username");//needs label
+	HBox uNameBx = new HBox();
+	Label l1 = new Label("Username: ");
+	TextField logInName = new TextField();//needs label
+	HBox uPassBx = new HBox();
+	Label l2 = new Label("Password: ");
 	PasswordField logInPass = new PasswordField();//needs label
 	Button logInBut = new Button("Log In");
 
 	Pane pane2 = new Pane();
-	Scene addUser = new Scene(pane2, 600,300);
-	TextField name = new TextField("Lastname, Firstname");
-	TextField userName = new TextField("Username");
-	TextField secretPass = new TextField("Password");
-	TextField birth = new TextField("Birthday");
+	Scene addUser = new Scene (pane2, 400,300);
+	VBox enterNameBx = new VBox();
+	TextField name = new TextField();
+	Label l3 = new Label("Last-name, Firstname: ");
+	VBox enterLogBx = new VBox();
+	TextField userName = new TextField();
+	Label l5 = new Label("Username: "
+			+ "(at least 6 characters)");
+	VBox enterPassBx = new VBox();
+	TextField secretPass = new TextField();
+	Label l6 = new Label("Password: ");
+	VBox enterBirthBx = new VBox();
+	TextField birth = new TextField();
+	Label l4 = new Label("Birthday MM-DD-YYYY: ");
+	VBox addInfoBx = new VBox();
+	HBox buttonBx = new HBox();
 	Button addThis = new Button("Add User");
+	Button back4 = new Button ("Back");
 	Text invalidUsername = new Text(50,50, "Invalid username, too few characters. Please try again.");
 	Text invalidName = new Text(50,50, "Please enter a valid name in the format Lastname, Firstname.");
 	Text dateFormatErr = new Text (50, 50, "Incorrect format.");
 
 	Pane pane3 = new Pane();
-	Scene userMenu = new Scene(pane3, 300,300);
+	Scene userMenu = new Scene(pane3, 400,300);
 	Button editProfile = new Button("Edit Profile");
 	Button orderTickets = new Button("Buy Tickets");
 
 	Pane pane4 = new Pane();
-	Scene ownerMenu = new Scene(pane4, 300,300);
+	Scene ownerMenu = new Scene(pane4, 400,300);
 	Button addMore = new Button("Add New User");
 	Button listAll = new Button("List All Users");
+	Button back5 = new Button("Back");
 
 
 	Pane pane5 = new Pane();
-	Scene userEdit = new Scene(pane5, 300,300);
+	Scene userEdit = new Scene(pane5, 400,300);
+	Button back2 = new Button ("Back");
 
 
 	Pane pane6 = new Pane();
-	Scene ownerEdit = new Scene(pane6, 300,300);
+	Scene ownerEdit = new Scene(pane6, 400,300);
 	Text currentName = new Text();
 	TextField newName = new TextField();
 	Text currentUsername = new Text();
@@ -88,28 +107,34 @@ public class RoboGUI extends Application{
 	Text currentDateJoin = new Text();
 	TextField newDateJoin = new TextField();
 	Button ownerEdited = new Button("Save Edits");
-	ComboBox<User> selectUser = new ComboBox<User>();
-	Button selected = new Button ("Select");
+	//ComboBox<User> selectUser = new ComboBox<User>();
+	//Button selected = new Button ("Select");
 	Button ownEdit = new Button("Edit User");
+	Button back1 = new Button ("Back");
 
 	Pane pane7 = new Pane();
-	Scene ticketMenu = new Scene(pane7, 300,300);
+	Scene ticketMenu = new Scene(pane7, 400,300);
 	ComboBox<String> eventPicker = new ComboBox<String>();
 	Button eventPick = new Button ("Select Event");
 
 	Pane pane8 = new Pane();
-	Scene listMenu = new Scene(pane8, 300,300);
+	Scene listMenu = new Scene(pane8, 400,300);
+	Button back3 = new Button ("Back");
 
 
 	Pane pane9 = new Pane();
-	Scene errorPg = new Scene(pane9,300,300);
+	Scene errorPg = new Scene(pane9, 400,300);
 	Text err = new Text("An error had occured.");
 
 	//buying a ticket
 	public void buyTicket(){
-		//List<String> eventOpt = new ObservableList<String>();
-		//eventOpt.addAll("concert","theatre","sport");
-
+		ArrayList<String> optionList = new ArrayList<String>();
+		optionList.add("concert");
+		optionList.add("sport");
+		optionList.add("theater");
+		ObservableList<String> eventOpt = FXCollections.observableArrayList(optionList);
+		eventPicker.setItems(eventOpt);
+		
 		//there should be a ComboBox of event types and when one is selected (without a button) this should happen
 		//I think the ComboBox needs a listener, but I am honestly not sure
 		eventPick.setOnAction(new EventHandler<ActionEvent>(){
@@ -176,17 +201,31 @@ public class RoboGUI extends Application{
 		st1.setTitle("RoboTicket");
 
 		//Backgrounds
-		welcomeSn.setFill(Color.PINK);
+		welcomeSn.setFill(Color.DEEPSKYBLUE);
 		pane1.setBackground(null);
 		addUser.setFill(Color.PINK);
 		pane2.setBackground(null);
+		userMenu.setFill(Color.PINK);
+		pane3.setBackground(null);
+		ownerMenu.setFill(Color.PINK);
+		pane4.setBackground(null);
+		userEdit.setFill(Color.PINK);
+		pane5.setBackground(null);
+		ownerEdit.setFill(Color.PINK);
+		pane6.setBackground(null);
+		ticketMenu.setFill(Color.PINK);
+		pane7.setBackground(null);
+		listMenu.setFill(Color.PINK);
+		pane8.setBackground(null);
+		errorPg.setFill(Color.RED);
+		pane9.setBackground(null);
+		
+		
 
-		//Buttons
-		logInPass.setLayoutX(70);
-		logInPass.setLayoutY(120);
+		// Button Layouts
 
-		logInName.setLayoutX(70);
-		logInName.setLayoutY(90);
+		uNameBx.setLayoutX(70);
+		uNameBx.setLayoutY(90);
 
 		logInBut.setLayoutX(70);
 		logInBut.setLayoutY(150);
@@ -208,17 +247,17 @@ public class RoboGUI extends Application{
 
 		orderTickets.setLayoutX(70);
 		orderTickets.setLayoutY(100);
+		
+		back3.setLayoutX(120);
 
-		//TextFields
-		name.setLayoutY(20);
-		userName.setLayoutY(50);
-		secretPass.setLayoutY(80);
-		birth.setLayoutY(110);
-		addThis.setLayoutY(150);
+		//Box Layouts
+		addInfoBx.setLayoutX(70);
+		addInfoBx.setLayoutY(20);
+		
+		uPassBx.setLayoutX(70);
+		uPassBx.setLayoutY(120);
 
 		//ListView
-		selectUser.setLayoutY(10);
-		selected.setLayoutY(20);
 		currentName.setLayoutY(40);
 		newName.setLayoutY(50);
 		currentUsername.setLayoutY(70);
@@ -228,22 +267,64 @@ public class RoboGUI extends Application{
 		currentDateJoin.setLayoutY(110);
 		newDateJoin.setLayoutY(120);
 		ownerEdited.setLayoutY(150);
+		
+		//combobox
+		eventPicker.setLayoutX(150);
+		eventPicker.setLayoutY(20);
+		
+		//Box Spacing
+		addInfoBx.setSpacing(10);
+		buttonBx.setSpacing(30);
+		
+		//labels
+		uNameBx.getChildren().addAll(l1, logInName);
+		uPassBx.getChildren().addAll(l2, logInPass);
+		enterNameBx.getChildren().addAll(l3, name);
+		enterLogBx.getChildren().addAll(l5, userName);
+		enterPassBx.getChildren().addAll(l6, secretPass);
+		enterBirthBx.getChildren().addAll(l4, birth);
+		buttonBx.getChildren().addAll(back4, addThis);
+		addInfoBx.getChildren().addAll(enterNameBx, enterLogBx, enterPassBx, enterBirthBx, buttonBx);
+		
 
 
 		//adding everything to the panes 
-		pane1.getChildren().addAll(line1, logInBut, line2, logInName, logInPass);
-		pane2.getChildren().addAll(name, userName, secretPass, birth, addThis );
+		pane1.getChildren().addAll(line1, line2, uNameBx, uPassBx, logInBut);
+		pane2.getChildren().add(addInfoBx);
 		pane3.getChildren().addAll(logOut, editProfile, orderTickets);
 		pane4.getChildren().addAll(logOut, addMore, listAll);
+		pane5.getChildren().add(back2);
 		pane6.getChildren().addAll(currentName, newName, currentUsername, newUsername, currentTotPay, newTotPay, 
-				currentDateJoin, newDateJoin, ownerEdited, selectUser, selected);
-		pane7.getChildren().addAll(eventPicker, eventPick);
-		pane8.getChildren().add(ownEdit);
+				currentDateJoin, newDateJoin, ownerEdited, back3);
+		pane7.getChildren().addAll(eventPicker);
+		pane8.getChildren().addAll(ownEdit, back3);
 		pane9.getChildren().add(err);
 	}
 
 	public void start (Stage st1){
 		buildGUI();
+		//Fix the back buttons. they are messed up
+		//can i have a user vs owner back that shows up on multiple panes??
+		back1.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				st1.setScene(ownerMenu);
+			}
+		});
+		back2.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				st1.setScene(userMenu);
+			}
+		});
+		back3.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				st1.setScene(ownerMenu);
+			}
+		});
+		back4.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				st1.setScene(ownerMenu);
+			}
+		});
 		orderTickets.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				st1.setScene(ticketMenu);
@@ -281,6 +362,8 @@ public class RoboGUI extends Application{
 		logOut.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				currentUser = null;
+				logInName.clear();
+				logInPass.clear();
 				st1.setScene(welcomeSn);
 			}
 		});
@@ -289,11 +372,11 @@ public class RoboGUI extends Application{
 
 			}
 		});
-		selected.setOnAction(new EventHandler<ActionEvent>(){
+		/*selected.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 
 			}
-		});
+		});*/
 
 		addThis.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
