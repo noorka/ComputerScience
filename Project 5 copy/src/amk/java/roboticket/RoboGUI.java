@@ -38,7 +38,9 @@ public class RoboGUI extends Application{
 	RoboTicket rt = new RoboTicket();
 	User currentUser;
 	Button logOut = new Button ("Log Out");
-	//Button back1 = new Button ("Back");
+	Button backUser = new Button ("Back");
+	Button backOwner = new Button ("Back");
+	Button backList = new Button ("Back");
 	ObservableList<User> listoUsers = null;
 
 	Font f1 = Font.font ("Comic Sans", FontWeight.NORMAL, FontPosture.REGULAR, 20);
@@ -74,7 +76,7 @@ public class RoboGUI extends Application{
 	VBox addInfoBx = new VBox();
 	HBox buttonBx = new HBox();
 	Button addThis = new Button("Add User");
-	Button back4 = new Button ("Back");
+	//Button back4 = new Button ("Back");
 	Text invalidUsername = new Text(50,50, "Invalid username, too few characters. Please try again.");
 	Text invalidName = new Text(50,50, "Please enter a valid name in the format Lastname, Firstname.");
 	Text dateFormatErr = new Text (50, 50, "Incorrect format.");
@@ -88,12 +90,12 @@ public class RoboGUI extends Application{
 	Scene ownerMenu = new Scene(pane4, 400,300);
 	Button addMore = new Button("Add New User");
 	Button listAll = new Button("List All Users");
-	Button back5 = new Button("Back");
+	//Button back5 = new Button("Back");
 
 
 	Pane pane5 = new Pane();
 	Scene userEdit = new Scene(pane5, 400,300);
-	Button back2 = new Button ("Back");
+	//Button back2 = new Button ("Back");
 
 
 	Pane pane6 = new Pane();
@@ -110,7 +112,7 @@ public class RoboGUI extends Application{
 	//ComboBox<User> selectUser = new ComboBox<User>();
 	//Button selected = new Button ("Select");
 	Button ownEdit = new Button("Edit User");
-	Button back1 = new Button ("Back");
+	//Button back1 = new Button ("Back");
 
 	Pane pane7 = new Pane();
 	Scene ticketMenu = new Scene(pane7, 400,300);
@@ -119,7 +121,7 @@ public class RoboGUI extends Application{
 
 	Pane pane8 = new Pane();
 	Scene listMenu = new Scene(pane8, 400,300);
-	Button back3 = new Button ("Back");
+	//Button back3 = new Button ("Back");
 
 
 	Pane pane9 = new Pane();
@@ -223,6 +225,15 @@ public class RoboGUI extends Application{
 		
 
 		// Button Layouts
+		
+		backUser.setLayoutX(70);
+		backUser.setLayoutY(170);
+		
+		backOwner.setLayoutX(70);
+		backOwner.setLayoutY(170);
+		
+		backList.setLayoutX(170);
+
 
 		uNameBx.setLayoutX(70);
 		uNameBx.setLayoutY(90);
@@ -248,7 +259,6 @@ public class RoboGUI extends Application{
 		orderTickets.setLayoutX(70);
 		orderTickets.setLayoutY(100);
 		
-		back3.setLayoutX(120);
 
 		//Box Layouts
 		addInfoBx.setLayoutX(70);
@@ -258,6 +268,7 @@ public class RoboGUI extends Application{
 		uPassBx.setLayoutY(120);
 
 		//ListView
+		
 		currentName.setLayoutY(40);
 		newName.setLayoutY(50);
 		currentUsername.setLayoutY(70);
@@ -283,7 +294,7 @@ public class RoboGUI extends Application{
 		enterLogBx.getChildren().addAll(l5, userName);
 		enterPassBx.getChildren().addAll(l6, secretPass);
 		enterBirthBx.getChildren().addAll(l4, birth);
-		buttonBx.getChildren().addAll(back4, addThis);
+		buttonBx.getChildren().addAll(backOwner, addThis);
 		addInfoBx.getChildren().addAll(enterNameBx, enterLogBx, enterPassBx, enterBirthBx, buttonBx);
 		
 
@@ -293,11 +304,11 @@ public class RoboGUI extends Application{
 		pane2.getChildren().add(addInfoBx);
 		pane3.getChildren().addAll(logOut, editProfile, orderTickets);
 		pane4.getChildren().addAll(logOut, addMore, listAll);
-		pane5.getChildren().add(back2);
+		pane5.getChildren().add(backUser);
 		pane6.getChildren().addAll(currentName, newName, currentUsername, newUsername, currentTotPay, newTotPay, 
-				currentDateJoin, newDateJoin, ownerEdited, back3);
+				currentDateJoin, newDateJoin, ownerEdited, backList);
 		pane7.getChildren().addAll(eventPicker);
-		pane8.getChildren().addAll(ownEdit, back3);
+		pane8.getChildren().addAll(ownEdit, backOwner);
 		pane9.getChildren().add(err);
 	}
 
@@ -305,28 +316,24 @@ public class RoboGUI extends Application{
 		buildGUI();
 		//Fix the back buttons. they are messed up
 		//can i have a user vs owner back that shows up on multiple panes??
-		back1.setOnAction(new EventHandler<ActionEvent>(){
+		backList.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				st1.setScene(listMenu);
+			}
+		});
+		backOwner.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				st1.setScene(ownerMenu);
 			}
 		});
-		back2.setOnAction(new EventHandler<ActionEvent>(){
+		backUser.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				st1.setScene(userMenu);
 			}
 		});
-		back3.setOnAction(new EventHandler<ActionEvent>(){
-			@Override public void handle(ActionEvent e){
-				st1.setScene(ownerMenu);
-			}
-		});
-		back4.setOnAction(new EventHandler<ActionEvent>(){
-			@Override public void handle(ActionEvent e){
-				st1.setScene(ownerMenu);
-			}
-		});
 		orderTickets.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
+				buyTicket();
 				st1.setScene(ticketMenu);
 			}
 		});
@@ -344,6 +351,7 @@ public class RoboGUI extends Application{
 			@Override public void handle(ActionEvent e){
 
 				ListView<User> listUs = new ListView<User>(listoUsers);
+				listUs.setPrefSize(250, 200);
 				pane8.getChildren().add(listUs);
 				st1.setScene(listMenu);
 			}
