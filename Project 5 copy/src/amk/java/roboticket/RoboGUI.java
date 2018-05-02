@@ -22,6 +22,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 //import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -33,17 +34,13 @@ import javafx.stage.Stage;
 
 public class RoboGUI extends Application{
 	Stage st1 = new Stage();
-	//User u = new User();
 	RoboTicket rt = new RoboTicket();
 	User currentUser;
 	Button logOut = new Button ("Log Out");
 	Button back = new Button ("Back");
-	//ObservableList<User> listoUsers = FXCollections.observableArrayList(rt.userList);
+	ObservableList<User> listoUsers = null;
 
 	Font f1 = Font.font ("Comic Sans", FontWeight.NORMAL, FontPosture.REGULAR, 20);
-
-	//Button exButton = new Button ("Start");
-	//Text line22 = new Text (130, 80, "Console Program Started.");
 
 
 	Pane pane1 = new Pane();
@@ -57,7 +54,6 @@ public class RoboGUI extends Application{
 	Pane pane2 = new Pane();
 	Scene addUser = new Scene(pane2, 600,300);
 	TextField name = new TextField("Lastname, Firstname");
-	//Label nameLab = new Label ("Lastname, Firstname", name);
 	TextField userName = new TextField("Username");
 	TextField secretPass = new TextField("Password");
 	TextField birth = new TextField("Birthday");
@@ -65,8 +61,6 @@ public class RoboGUI extends Application{
 	Text invalidUsername = new Text(50,50, "Invalid username, too few characters. Please try again.");
 	Text invalidName = new Text(50,50, "Please enter a valid name in the format Lastname, Firstname.");
 	Text dateFormatErr = new Text (50, 50, "Incorrect format.");
-
-	//User(String username, String name, String password, String paymentInfo, Date birthday)
 
 	Pane pane3 = new Pane();
 	Scene userMenu = new Scene(pane3, 300,300);
@@ -77,7 +71,7 @@ public class RoboGUI extends Application{
 	Scene ownerMenu = new Scene(pane4, 300,300);
 	Button addMore = new Button("Add New User");
 	Button listAll = new Button("List All Users");
-	Button ownEdit = new Button("Edit Users");
+
 
 	Pane pane5 = new Pane();
 	Scene userEdit = new Scene(pane5, 300,300);
@@ -94,56 +88,72 @@ public class RoboGUI extends Application{
 	Text currentDateJoin = new Text();
 	TextField newDateJoin = new TextField();
 	Button ownerEdited = new Button("Save Edits");
-	ComboBox selectUser = new ComboBox();
+	ComboBox<User> selectUser = new ComboBox<User>();
 	Button selected = new Button ("Select");
+	Button ownEdit = new Button("Edit User");
 
 	Pane pane7 = new Pane();
 	Scene ticketMenu = new Scene(pane7, 300,300);
-	ComboBox eventPicker = new ComboBox();
+	ComboBox<String> eventPicker = new ComboBox<String>();
 	Button eventPick = new Button ("Select Event");
 
 	Pane pane8 = new Pane();
 	Scene listMenu = new Scene(pane8, 300,300);
-	ListView  listUs = new ListView();
+
 
 	Pane pane9 = new Pane();
 	Scene errorPg = new Scene(pane9,300,300);
 	Text err = new Text("An error had occured.");
 
-	//filling the observable list with strings
-	public ObservableList<String> fillOL(){
-		ObservableList<String> i = null;
-		for(User user:rt.userList){
-			String nowUserStr = user.toString();
-			i.addAll(nowUserStr);
-		}
-		return i;
-	}
 	//buying a ticket
 	public void buyTicket(){
 		//List<String> eventOpt = new ObservableList<String>();
-				//eventOpt.addAll("concert","theatre","sport");
+		//eventOpt.addAll("concert","theatre","sport");
+
+		//there should be a ComboBox of event types and when one is selected (without a button) this should happen
+		//I think the ComboBox needs a listener, but I am honestly not sure
 		eventPick.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				String chosenOne = (String) eventPicker.getValue();
 				if(chosenOne == "concert"){
 					ToggleGroup concertAges = new ToggleGroup();
-					//HBox boxyBox = new HBox();
+					VBox vb1 = new VBox();
 					RadioButton concertKid = new RadioButton("Child: $75");
 					RadioButton concertAdult = new RadioButton("Adult: $150");
 					RadioButton concertSr = new RadioButton("Senior: $112.50");
 					concertKid.setToggleGroup(concertAges);
+					concertKid.setOnAction(new EventHandler<ActionEvent>(){
+						@Override public void handle(ActionEvent e){
+							Label numTixL = new Label("Enter the number of child tickets you would like.");
+							HBox hb1 = new HBox();
+							TextField numTix = new TextField();
+							hb1.getChildren().addAll(numTixL, numTix);
+							hb1.setLayoutX(150);
+							hb1.setLayoutY(50);
+							pane7.getChildren().add(hb1);
+							//Maybe this should be another combo box of numbers of tickets they can buy
+							//I can't figure out how to have a user input field that only allows for a number 
+							//there is also supposed to be a charge fee thing here that I think should be a switch statement in the robo ticket class
+							String tixNum = numTix.getText();
+							//from here I should be calculating how much they bought and adding it to the total paid 
+							//she never asked for an end transaction button or if they can buy more than one type of ticket at a time
+							//I figure I can send them back to the user menu? Or should they have the option to buy more?
+							//maybe I will just have a complete transaction button pop up when they select a number
+						}
+					});
 					concertAdult.setToggleGroup(concertAges);
 					concertSr.setToggleGroup(concertAges);
-					Pane buttonPane = new Pane();
-					buttonPane.getChildren().addAll(concertKid, concertAdult, concertSr);
+					vb1.getChildren().addAll(concertKid, concertAdult, concertSr);
+					vb1.setLayoutX(100);
+					vb1.setLayoutY(100);
+					pane7.getChildren().add(vb1);
 					//how do I get these buttons to show up nicely in a little pane and have them all do the right things when selected?
 				}
 				else if(chosenOne == "sport"){
-					
+
 				}
 				else{
-					
+
 				}
 			}
 		});
@@ -153,16 +163,12 @@ public class RoboGUI extends Application{
 		switch(rt.fileScan()){
 		case 1:
 			return addUser;
-			//st1.setScene(addUser);
-			//break;
+
 		case 2:
 			return welcomeSn;
-			//st1.setScene(welcomeSn);
-			//break;
+
 		default:
 			return errorPg;
-			//st1.setScene(errorPg);
-			//break;
 		}
 	}
 	//putting all the stuff together to look pretty
@@ -223,21 +229,19 @@ public class RoboGUI extends Application{
 		newDateJoin.setLayoutY(120);
 		ownerEdited.setLayoutY(150);
 
-		//listUs.setItems(listoUsers);
-
 
 		//adding everything to the panes 
 		pane1.getChildren().addAll(line1, logInBut, line2, logInName, logInPass);
 		pane2.getChildren().addAll(name, userName, secretPass, birth, addThis );
 		pane3.getChildren().addAll(logOut, editProfile, orderTickets);
-		pane4.getChildren().addAll(logOut, addMore, listAll, ownEdit);
+		pane4.getChildren().addAll(logOut, addMore, listAll);
 		pane6.getChildren().addAll(currentName, newName, currentUsername, newUsername, currentTotPay, newTotPay, 
 				currentDateJoin, newDateJoin, ownerEdited, selectUser, selected);
 		pane7.getChildren().addAll(eventPicker, eventPick);
-		pane8.getChildren().add(listUs);
+		pane8.getChildren().add(ownEdit);
 		pane9.getChildren().add(err);
 	}
-	
+
 	public void start (Stage st1){
 		buildGUI();
 		orderTickets.setOnAction(new EventHandler<ActionEvent>(){
@@ -257,17 +261,19 @@ public class RoboGUI extends Application{
 		});
 		listAll.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
-				ObservableList<String> myList = fillOL();
-				listUs.setItems(myList);
+
+				ListView<User> listUs = new ListView<User>(listoUsers);
+				pane8.getChildren().add(listUs);
 				st1.setScene(listMenu);
 			}
 		});
 		ownEdit.setOnAction(new EventHandler<ActionEvent>(){
-			//need to take a selected user and pass the reference to the next scene...
+			//so I think this is actually a button on the list user scene. 
+			//I need to register a listener on the ListView of all the users so that i can go in a edit the selected user
+			//i need to some how capture where the user is in the ArrayList, get all the relevant data, and be able to make changes
+			//then i need to be able to change all the things to their new things
 
 			@Override public void handle(ActionEvent e){
-				ObservableList<String> myList = fillOL();
-				selectUser.setItems(myList);
 				st1.setScene(ownerEdit);
 			}
 		});
@@ -300,44 +306,33 @@ public class RoboGUI extends Application{
 				String bDay = birth.getText();
 
 				if(User.isValidName(usersName)!= true){
-					//Text invalidName = new Text(50,50, "Please enter a valid name in the format Lastname, Firstname.");
 					pane2.getChildren().add(invalidName);
 					usersName = null;
 					name.clear();
 				}
 				else{
-
-					//String loginName = userName.getText();
 					if(User.isValidUsername(loginName)!= true){
-						//Text invalidUsername = new Text(50,50, "Invalid username, too few characters. Please try again.");
 						pane2.getChildren().add(invalidUsername);
 						loginName = null;
 						userName.clear();
 					}
 					else{
-						//String myPass = secretPass.getText();
-
-						//String bDay = birth.getText();
-						//Date birthdate=null;
 						SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 						try{
 							birthdate = format.parse(bDay);
 						}
 						catch(ParseException pe){
-							//Text dateFormatErr = new Text (50, 50, "Incorrect format.");
 							pane2.getChildren().add(dateFormatErr);
 							bDay = null;
 							birth.clear();
 						}
 					}
 				}
-				//protected User newUser(String username, String name, String password, String paymentInfo, Date birthday){ 
 				currentUser = rt.newUser(loginName, usersName, myPass, payInfo, birthdate);
 				name.clear();
 				userName.clear();
 				secretPass.clear();
 				birth.clear();
-				//invalidUsername.isVisible(false);
 
 				st1.setScene(ownerMenu);
 				//event
@@ -368,14 +363,10 @@ public class RoboGUI extends Application{
 					logInName.clear();
 					logInPass.clear();
 				}
-				//check if the username and password match a pair in the array list 
-				//if there isn't a match show an error message and have them try again
-				//if they match then check the userID
-				//if the userID is 0 go to the owner menu
-				//if the userID is anything else go to the user menu
 			}
 		});
 		st1.setScene(fileIn());
+		listoUsers = FXCollections.observableArrayList(rt.userList);
 		st1.show();
 	}
 	public void stop () {
