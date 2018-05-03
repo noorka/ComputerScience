@@ -22,7 +22,7 @@ public class User implements Serializable{
 	private String paymentInfo = "None";
 	private String paymentType = null;
 	private Integer payAccount = 0;
-	private Integer paidToDate = 0;
+	private static Integer paidToDate = 0;
 
 	/**
 	 * This constructs the User class with all its required elements.
@@ -108,7 +108,7 @@ public class User implements Serializable{
 	 * @param int amount
 	 * @return none
 	 */
-	public void paidAmount (int amount){
+	public static void paidAmount (int amount){
 		int tempPay = amount +paidToDate;
 		paidToDate = tempPay;
 	}

@@ -117,7 +117,9 @@ public class RoboGUI extends Application{
 	Pane pane7 = new Pane();
 	Scene ticketMenu = new Scene(pane7, 400,300);
 	ComboBox<String> eventPicker = new ComboBox<String>();
-	Button eventPick = new Button ("Select Event");
+	Button finishPay = new Button("Finish Transaction");
+	VBox vb1 = new VBox();
+	VBox vb2 = new VBox();
 
 	Pane pane8 = new Pane();
 	Scene listMenu = new Scene(pane8, 400,300);
@@ -136,45 +138,54 @@ public class RoboGUI extends Application{
 		optionList.add("theater");
 		ObservableList<String> eventOpt = FXCollections.observableArrayList(optionList);
 		eventPicker.setItems(eventOpt);
-		
+
 		//there should be a ComboBox of event types and when one is selected (without a button) this should happen
 		//I think the ComboBox needs a listener, but I am honestly not sure
-		eventPick.setOnAction(new EventHandler<ActionEvent>(){
+		eventPicker.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				String chosenOne = (String) eventPicker.getValue();
+				//eventPicker.setDisable(true);
 				if(chosenOne == "concert"){
 					ToggleGroup concertAges = new ToggleGroup();
-					VBox vb1 = new VBox();
 					RadioButton concertKid = new RadioButton("Child: $75");
 					RadioButton concertAdult = new RadioButton("Adult: $150");
 					RadioButton concertSr = new RadioButton("Senior: $112.50");
 					concertKid.setToggleGroup(concertAges);
 					concertKid.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
-							Label numTixL = new Label("Enter the number of child tickets you would like.");
-							HBox hb1 = new HBox();
-							TextField numTix = new TextField();
-							hb1.getChildren().addAll(numTixL, numTix);
-							hb1.setLayoutX(150);
-							hb1.setLayoutY(50);
-							pane7.getChildren().add(hb1);
-							//Maybe this should be another combo box of numbers of tickets they can buy
-							//I can't figure out how to have a user input field that only allows for a number 
-							//there is also supposed to be a charge fee thing here that I think should be a switch statement in the robo ticket class
-							String tixNum = numTix.getText();
-							//from here I should be calculating how much they bought and adding it to the total paid 
-							//she never asked for an end transaction button or if they can buy more than one type of ticket at a time
-							//I figure I can send them back to the user menu? Or should they have the option to buy more?
-							//maybe I will just have a complete transaction button pop up when they select a number
+							Label numTixL = new Label("Select the number of child tickets you would like.");
+							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
+							amountOpt.add(1);
+							amountOpt.add(2);
+							amountOpt.add(3);
+							amountOpt.add(4);
+							amountOpt.add(5);
+							amountOpt.add(6);
+							amountOpt.add(7);
+							amountOpt.add(8);
+							amountOpt.add(9);
+							ObservableList<Integer> amountList = FXCollections.observableArrayList(amountOpt);;
+							ComboBox<Integer> numTix = new ComboBox<Integer>();
+							numTix.setItems(amountList);
+							vb1.getChildren().addAll(numTixL, numTix);
+							vb1.setLayoutX(100);
+							vb1.setLayoutY(50);
+							pane7.getChildren().add(vb1);
+							numTix.setOnAction(new EventHandler<ActionEvent>(){
+								@Override public void handle(ActionEvent e){
+									finishPay.setVisible(true);
+									Integer price = 75;
+									rt.chargeFee(numTix.getValue(), price);
+								}
+							});
 						}
 					});
 					concertAdult.setToggleGroup(concertAges);
 					concertSr.setToggleGroup(concertAges);
-					vb1.getChildren().addAll(concertKid, concertAdult, concertSr);
-					vb1.setLayoutX(100);
-					vb1.setLayoutY(100);
-					pane7.getChildren().add(vb1);
-					//how do I get these buttons to show up nicely in a little pane and have them all do the right things when selected?
+					vb2.getChildren().addAll(concertKid, concertAdult, concertSr);
+					vb2.setLayoutX(100);
+					vb2.setLayoutY(100);
+					pane7.getChildren().add(vb2);
 				}
 				else if(chosenOne == "sport"){
 
@@ -221,17 +232,20 @@ public class RoboGUI extends Application{
 		pane8.setBackground(null);
 		errorPg.setFill(Color.RED);
 		pane9.setBackground(null);
-		
-		
+
+
 
 		// Button Layouts
-		
+
+		finishPay.setLayoutX(100);
+		finishPay.setLayoutY(170);
+
 		backUser.setLayoutX(70);
 		backUser.setLayoutY(170);
-		
+
 		backOwner.setLayoutX(70);
 		backOwner.setLayoutY(170);
-		
+
 		backList.setLayoutX(170);
 
 
@@ -258,17 +272,17 @@ public class RoboGUI extends Application{
 
 		orderTickets.setLayoutX(70);
 		orderTickets.setLayoutY(100);
-		
+
 
 		//Box Layouts
 		addInfoBx.setLayoutX(70);
 		addInfoBx.setLayoutY(20);
-		
+
 		uPassBx.setLayoutX(70);
 		uPassBx.setLayoutY(120);
 
 		//ListView
-		
+
 		currentName.setLayoutY(40);
 		newName.setLayoutY(50);
 		currentUsername.setLayoutY(70);
@@ -278,15 +292,15 @@ public class RoboGUI extends Application{
 		currentDateJoin.setLayoutY(110);
 		newDateJoin.setLayoutY(120);
 		ownerEdited.setLayoutY(150);
-		
+
 		//combobox
 		eventPicker.setLayoutX(150);
 		eventPicker.setLayoutY(20);
-		
+
 		//Box Spacing
 		addInfoBx.setSpacing(10);
 		buttonBx.setSpacing(30);
-		
+
 		//labels
 		uNameBx.getChildren().addAll(l1, logInName);
 		uPassBx.getChildren().addAll(l2, logInPass);
@@ -296,7 +310,11 @@ public class RoboGUI extends Application{
 		enterBirthBx.getChildren().addAll(l4, birth);
 		buttonBx.getChildren().addAll(backOwner, addThis);
 		addInfoBx.getChildren().addAll(enterNameBx, enterLogBx, enterPassBx, enterBirthBx, buttonBx);
-		
+
+
+
+		finishPay.setVisible(false);
+
 
 
 		//adding everything to the panes 
@@ -307,7 +325,7 @@ public class RoboGUI extends Application{
 		pane5.getChildren().add(backUser);
 		pane6.getChildren().addAll(currentName, newName, currentUsername, newUsername, currentTotPay, newTotPay, 
 				currentDateJoin, newDateJoin, ownerEdited, backList);
-		pane7.getChildren().addAll(eventPicker);
+		pane7.getChildren().addAll(eventPicker, finishPay);
 		pane8.getChildren().addAll(ownEdit, backOwner);
 		pane9.getChildren().add(err);
 	}
@@ -316,6 +334,16 @@ public class RoboGUI extends Application{
 		buildGUI();
 		//Fix the back buttons. they are messed up
 		//can i have a user vs owner back that shows up on multiple panes??
+		
+		finishPay.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				st1.setScene(userMenu);
+				eventPicker.setDisable(false);
+				pane7.getChildren().removeAll(vb1,vb2);
+				finishPay.setVisible(false);
+			}
+		});
+
 		backList.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				st1.setScene(listMenu);

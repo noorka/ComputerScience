@@ -122,7 +122,7 @@ public class RoboTicket {
 		}
 	}*/
 	
-	private void listUsers(ArrayList <User> myList){
+	/*private void listUsers(ArrayList <User> myList){
 		String titles = "UserID\tUsername       Name                   Is User  Member Years    Paid to Date";
 		//need to display id, login name, isUser, get years, paidToDate
 		System.out.println("LIST THE USERS");
@@ -131,7 +131,7 @@ public class RoboTicket {
 		for(User thisUser: myList){
 			System.out.print(thisUser.toString());
 		}
-	}
+	}*/
 
 	protected User newUser(String username, String name, String password, String paymentInfo, Date birthday){ 
 		User myUser = new User(username, name, password,paymentInfo, birthday);
@@ -177,6 +177,12 @@ public class RoboTicket {
 			e.printStackTrace();
 		}             
 
+	}
+	
+	public void chargeFee(Integer numTix, Integer price){
+		Integer fee = numTix*price;
+		User.paidAmount(fee);
+		
 	}
 	/**
 	 * This is the main function. It launches the GUI window, welcomes the user, and proceeds with the doMenu and fileScan
