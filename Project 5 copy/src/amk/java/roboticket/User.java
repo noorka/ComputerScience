@@ -205,6 +205,9 @@ public class User implements Serializable{
 	public void setDateJoined(GregorianCalendar dateJoined) {
 		this.dateJoined = dateJoined;
 	}
+	public GregorianCalendar getDateJoined(){
+		return dateJoined;
+	}
 	/**
 	 * This function sets the user's ID number.
 	 * @param Integer userID

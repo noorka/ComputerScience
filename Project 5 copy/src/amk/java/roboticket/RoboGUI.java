@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -20,6 +21,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 //import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -52,10 +54,10 @@ public class RoboGUI extends Application{
 	Text line2 = new Text (70, 80, "Please enter your username and password.");
 	HBox uNameBx = new HBox();
 	Label l1 = new Label("Username: ");
-	TextField logInName = new TextField();//needs label
+	TextField logInName = new TextField();
 	HBox uPassBx = new HBox();
 	Label l2 = new Label("Password: ");
-	PasswordField logInPass = new PasswordField();//needs label
+	PasswordField logInPass = new PasswordField();
 	Button logInBut = new Button("Log In");
 
 	Pane pane2 = new Pane();
@@ -76,7 +78,6 @@ public class RoboGUI extends Application{
 	VBox addInfoBx = new VBox();
 	HBox buttonBx = new HBox();
 	Button addThis = new Button("Add User");
-	//Button back4 = new Button ("Back");
 	Text invalidUsername = new Text(50,50, "Invalid username, too few characters. Please try again.");
 	Text invalidName = new Text(50,50, "Please enter a valid name in the format Lastname, Firstname.");
 	Text dateFormatErr = new Text (50, 50, "Incorrect format.");
@@ -90,29 +91,37 @@ public class RoboGUI extends Application{
 	Scene ownerMenu = new Scene(pane4, 400,300);
 	Button addMore = new Button("Add New User");
 	Button listAll = new Button("List All Users");
-	//Button back5 = new Button("Back");
 
 
 	Pane pane5 = new Pane();
 	Scene userEdit = new Scene(pane5, 400,300);
-	//Button back2 = new Button ("Back");
+	String currentUName = new String();
+	TextField newUName = new TextField();
+	String currentLogIn = new String();
+	TextField newLogIn = new TextField();
+	String currentPassword = new String();
+	TextField newPassword = new TextField();
+	VBox uEditingFields = new VBox();
+	Button userEdited = new Button("Save Edits");
+	//how do I even do payment info?
 
 
 	Pane pane6 = new Pane();
 	Scene ownerEdit = new Scene(pane6, 400,300);
-	Text currentName = new Text();
+	String currentName = new String();
+	//Label nameL = new Label(currentName);
 	TextField newName = new TextField();
-	Text currentUsername = new Text();
+	String currentUsername = new String();
+	//Label usernameL = new Label(currentUsername);
 	TextField newUsername = new TextField();
-	Text currentTotPay = new Text();
+	String currentTotPay = new String();
+	//Label totPayL = new Label(currentTotPay);
 	TextField newTotPay = new TextField();
-	Text currentDateJoin = new Text();
+	String currentDateJoin = new String();
+	//Label dateJoinedL = new Label(currentDateJoin);
 	TextField newDateJoin = new TextField();
+	VBox editingFields = new VBox();
 	Button ownerEdited = new Button("Save Edits");
-	//ComboBox<User> selectUser = new ComboBox<User>();
-	//Button selected = new Button ("Select");
-	Button ownEdit = new Button("Edit User");
-	//Button back1 = new Button ("Back");
 
 	Pane pane7 = new Pane();
 	Scene ticketMenu = new Scene(pane7, 400,300);
@@ -123,12 +132,72 @@ public class RoboGUI extends Application{
 
 	Pane pane8 = new Pane();
 	Scene listMenu = new Scene(pane8, 400,300);
-	//Button back3 = new Button ("Back");
+	ListView<User> listUs = new ListView<User>();
 
 
 	Pane pane9 = new Pane();
 	Scene errorPg = new Scene(pane9, 400,300);
 	Text err = new Text("An error had occured.");
+	
+	public void userEditing (User thisUser){
+		currentUName = thisUser.getName();
+		currentLogIn = thisUser.getUsername();
+		currentPassword = thisUser.getPassword();
+		
+		Label nameUL = new Label(currentUName);
+		Label usernameUL = new Label(currentLogIn);
+		Label passwordUL = new Label(currentPassword);
+		
+		uEditingFields.getChildren().addAll(nameUL, newUName, usernameUL, newLogIn, passwordUL, newPassword);
+		pane5.getChildren().addAll(uEditingFields, userEdited);
+		
+		userEdited.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				st1.setScene(userMenu);// it does the thing, but doesn't change the stage... 
+				currentUName = newUName.getText();
+				currentLogIn = newLogIn.getText();
+				currentPassword = newPassword.getText();
+				
+				thisUser.setName(currentUName);
+				thisUser.setUsername(currentLogIn);
+				thisUser.setPassword(currentPassword);
+			}
+		});
+		
+		
+	}
+	
+	public void ownerEditing (User thisUser){
+		currentName = thisUser.getName();
+		currentUsername = thisUser.getUsername();
+		currentTotPay = thisUser.getPaidToDate().toString(); // this is also bad
+		currentDateJoin = thisUser.getDateJoined().toString(); // this makes everything bad
+		
+		Label nameL = new Label(currentName);
+		Label usernameL = new Label(currentUsername);
+		Label totPayL = new Label(currentTotPay);
+		Label dateJoinedL = new Label(currentDateJoin);
+		
+		editingFields.getChildren().addAll(nameL, newName, usernameL, newUsername, totPayL, newTotPay, dateJoinedL, newDateJoin);
+		pane6.getChildren().addAll(editingFields, ownerEdited);
+		
+		ownerEdited.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				st1.setScene(ownerMenu);// it does the thing, but doesn't change the stage... 
+				currentName = newName.getText();
+				currentUsername = newUsername.getText();
+				currentTotPay = newTotPay.getText();
+				currentDateJoin = newDateJoin.getText();
+				
+				thisUser.setName(currentName);
+				thisUser.setUsername(currentUsername);
+				//thisUser.setDateJoined(currentDateJoin); THIS IS A PROBLEM
+				//thisUser.setPaidToDate(currentTotPay); THIS IS A PROBELEM
+			}
+		});
+		
+		
+	}
 
 	//buying a ticket
 	public void buyTicket(){
@@ -242,12 +311,12 @@ public class RoboGUI extends Application{
 					pane7.getChildren().add(vb2);
 				}
 				else if(chosenOne == "sport"){
-					ToggleGroup concertAges = new ToggleGroup();
-					RadioButton concertKid = new RadioButton("Child: $75");
-					RadioButton concertAdult = new RadioButton("Adult: $150");
-					RadioButton concertSr = new RadioButton("Senior: $112.50");
-					concertKid.setToggleGroup(concertAges);
-					concertKid.setOnAction(new EventHandler<ActionEvent>(){
+					ToggleGroup sportAges = new ToggleGroup();
+					RadioButton sportKid = new RadioButton("Child: $25");
+					RadioButton sportAdult = new RadioButton("Adult: $50");
+					RadioButton sportSr = new RadioButton("Senior: $37.5");
+					sportKid.setToggleGroup(sportAges);
+					sportKid.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
 							Label numTixL = new Label("Select the number of child tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
@@ -270,13 +339,13 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 75;
+									Integer price = 25;
 									rt.chargeFee(numTix.getValue(), price);
 								}
 							});
 						}
 					});
-					concertAdult.setOnAction(new EventHandler<ActionEvent>(){
+					sportAdult.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
 							Label numTixL = new Label("Select the number of adult tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
@@ -299,13 +368,13 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 150;
+									Integer price = 50;
 									rt.chargeFee(numTix.getValue(), price);
 								}
 							});
 						}
 					});
-					concertSr.setOnAction(new EventHandler<ActionEvent>(){
+					sportSr.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
 							Label numTixL = new Label("Select the number of Senior tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
@@ -328,26 +397,26 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 112;
+									Integer price = 38;
 									rt.chargeFee(numTix.getValue(), price);
 								}
 							});
 						}
 					});
-					concertAdult.setToggleGroup(concertAges);
-					concertSr.setToggleGroup(concertAges);
-					vb2.getChildren().addAll(concertKid, concertAdult, concertSr);
+					sportAdult.setToggleGroup(sportAges);
+					sportSr.setToggleGroup(sportAges);
+					vb2.getChildren().addAll(sportKid, sportAdult, sportSr);
 					vb2.setLayoutX(100);
 					vb2.setLayoutY(100);
 					pane7.getChildren().add(vb2);
 
 				}
 				else{
-					ToggleGroup concertAges = new ToggleGroup();
-					RadioButton concertKid = new RadioButton("Child: $75");
-					RadioButton concertAdult = new RadioButton("Adult: $150");
-					RadioButton concertSr = new RadioButton("Senior: $112.50");
-					concertKid.setToggleGroup(concertAges);
+					ToggleGroup theaterAges = new ToggleGroup();
+					RadioButton concertKid = new RadioButton("Child: $62.5");
+					RadioButton concertAdult = new RadioButton("Adult: $125");
+					RadioButton concertSr = new RadioButton("Senior: $93.75");
+					concertKid.setToggleGroup(theaterAges);
 					concertKid.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
 							Label numTixL = new Label("Select the number of child tickets you would like.");
@@ -371,7 +440,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 75;
+									Integer price = 63;
 									rt.chargeFee(numTix.getValue(), price);
 								}
 							});
@@ -400,7 +469,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 150;
+									Integer price = 125;
 									rt.chargeFee(numTix.getValue(), price);
 								}
 							});
@@ -429,14 +498,14 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 112;
+									Integer price = 94;
 									rt.chargeFee(numTix.getValue(), price);
 								}
 							});
 						}
 					});
-					concertAdult.setToggleGroup(concertAges);
-					concertSr.setToggleGroup(concertAges);
+					concertAdult.setToggleGroup(theaterAges);
+					concertSr.setToggleGroup(theaterAges);
 					vb2.getChildren().addAll(concertKid, concertAdult, concertSr);
 					vb2.setLayoutX(100);
 					vb2.setLayoutY(100);
@@ -513,14 +582,15 @@ public class RoboGUI extends Application{
 		listAll.setLayoutX(70);
 		listAll.setLayoutY(100);
 
-		ownEdit.setLayoutX(70);
-		ownEdit.setLayoutY(120);
-
 		editProfile.setLayoutX(70);
 		editProfile.setLayoutY(70);
 
 		orderTickets.setLayoutX(70);
 		orderTickets.setLayoutY(100);
+		
+		ownerEdited.setLayoutX(70);
+		ownerEdited.setLayoutY(350);
+		
 
 
 		//Box Layouts
@@ -532,13 +602,13 @@ public class RoboGUI extends Application{
 
 		//ListView
 
-		currentName.setLayoutY(40);
+		//currentName.setLayoutY(40);
 		newName.setLayoutY(50);
-		currentUsername.setLayoutY(70);
+		//currentUsername.setLayoutY(70);
 		newUsername.setLayoutY(60);
-		currentTotPay.setLayoutY(80);
+		//currentTotPay.setLayoutY(80);
 		newTotPay.setLayoutY(90);
-		currentDateJoin.setLayoutY(110);
+		//currentDateJoin.setLayoutY(110);
 		newDateJoin.setLayoutY(120);
 		ownerEdited.setLayoutY(150);
 
@@ -549,6 +619,7 @@ public class RoboGUI extends Application{
 		//Box Spacing
 		addInfoBx.setSpacing(10);
 		buttonBx.setSpacing(30);
+		editingFields.setSpacing(10);
 
 		//labels
 		uNameBx.getChildren().addAll(l1, logInName);
@@ -559,6 +630,7 @@ public class RoboGUI extends Application{
 		enterBirthBx.getChildren().addAll(l4, birth);
 		buttonBx.getChildren().addAll(backOwner, addThis);
 		addInfoBx.getChildren().addAll(enterNameBx, enterLogBx, enterPassBx, enterBirthBx, buttonBx);
+		//editingFields.getChildren().addAll(nameL, newName, usernameL, newUsername, totPayL, newTotPay, dateJoinedL, newDateJoin);
 
 
 
@@ -572,10 +644,9 @@ public class RoboGUI extends Application{
 		pane3.getChildren().addAll(logOut, editProfile, orderTickets);
 		pane4.getChildren().addAll(logOut, addMore, listAll);
 		pane5.getChildren().add(backUser);
-		pane6.getChildren().addAll(currentName, newName, currentUsername, newUsername, currentTotPay, newTotPay, 
-				currentDateJoin, newDateJoin, ownerEdited, backList);
+		pane6.getChildren().addAll(backList);
 		pane7.getChildren().addAll(eventPicker, finishPay);
-		pane8.getChildren().addAll(ownEdit, backOwner);
+		pane8.getChildren().addAll(backOwner);
 		pane9.getChildren().add(err);
 	}
 
@@ -583,7 +654,7 @@ public class RoboGUI extends Application{
 		buildGUI();
 		//Fix the back buttons. they are messed up
 		//can i have a user vs owner back that shows up on multiple panes??
-		
+
 		finishPay.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				st1.setScene(userMenu);
@@ -618,6 +689,7 @@ public class RoboGUI extends Application{
 		});
 		editProfile.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
+				userEditing(currentUser);
 				st1.setScene(userEdit);
 			}
 		});
@@ -628,24 +700,26 @@ public class RoboGUI extends Application{
 		});
 		listAll.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
-
-				ListView<User> listUs = new ListView<User>(listoUsers);
+				listoUsers = FXCollections.observableArrayList(rt.userList);
+				listUs.setItems(listoUsers);
 				listUs.setPrefSize(250, 200);
 				pane8.getChildren().add(listUs);
 				st1.setScene(listMenu);
 			}
 		});
-		ownEdit.setOnAction(new EventHandler<ActionEvent>(){
+		listUs.setOnMousePressed(new EventHandler<MouseEvent>(){
 			//so I think this is actually a button on the list user scene. 
 			//I need to register a listener on the ListView of all the users so that i can go in a edit the selected user
 			//i need to some how capture where the user is in the ArrayList, get all the relevant data, and be able to make changes
 			//then i need to be able to change all the things to their new things
 
-			@Override public void handle(ActionEvent e){
+			public void handle(MouseEvent m){
+				User editingUser = listUs.getSelectionModel().getSelectedItem();
+				ownerEditing(editingUser);
 				st1.setScene(ownerEdit);
 			}
 		});
-
+		
 		logOut.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				currentUser = null;
