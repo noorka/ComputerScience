@@ -138,14 +138,110 @@ public class RoboGUI extends Application{
 		optionList.add("theater");
 		ObservableList<String> eventOpt = FXCollections.observableArrayList(optionList);
 		eventPicker.setItems(eventOpt);
-
-		//there should be a ComboBox of event types and when one is selected (without a button) this should happen
-		//I think the ComboBox needs a listener, but I am honestly not sure
 		eventPicker.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				String chosenOne = (String) eventPicker.getValue();
-				//eventPicker.setDisable(true);
 				if(chosenOne == "concert"){
+					ToggleGroup concertAges = new ToggleGroup();
+					RadioButton concertKid = new RadioButton("Child: $75");
+					RadioButton concertAdult = new RadioButton("Adult: $150");
+					RadioButton concertSr = new RadioButton("Senior: $112.50");
+					concertKid.setToggleGroup(concertAges);
+					concertKid.setOnAction(new EventHandler<ActionEvent>(){
+						@Override public void handle(ActionEvent e){
+							Label numTixL = new Label("Select the number of child tickets you would like.");
+							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
+							amountOpt.add(1);
+							amountOpt.add(2);
+							amountOpt.add(3);
+							amountOpt.add(4);
+							amountOpt.add(5);
+							amountOpt.add(6);
+							amountOpt.add(7);
+							amountOpt.add(8);
+							amountOpt.add(9);
+							ObservableList<Integer> amountList = FXCollections.observableArrayList(amountOpt);
+							ComboBox<Integer> numTix = new ComboBox<Integer>();
+							numTix.setItems(amountList);
+							vb1.getChildren().addAll(numTixL, numTix);
+							vb1.setLayoutX(100);
+							vb1.setLayoutY(50);
+							pane7.getChildren().add(vb1);
+							numTix.setOnAction(new EventHandler<ActionEvent>(){
+								@Override public void handle(ActionEvent e){
+									finishPay.setVisible(true);
+									Integer price = 75;
+									rt.chargeFee(numTix.getValue(), price);
+								}
+							});
+						}
+					});
+					concertAdult.setOnAction(new EventHandler<ActionEvent>(){
+						@Override public void handle(ActionEvent e){
+							Label numTixL = new Label("Select the number of adult tickets you would like.");
+							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
+							amountOpt.add(1);
+							amountOpt.add(2);
+							amountOpt.add(3);
+							amountOpt.add(4);
+							amountOpt.add(5);
+							amountOpt.add(6);
+							amountOpt.add(7);
+							amountOpt.add(8);
+							amountOpt.add(9);
+							ObservableList<Integer> amountList = FXCollections.observableArrayList(amountOpt);
+							ComboBox<Integer> numTix = new ComboBox<Integer>();
+							numTix.setItems(amountList);
+							vb1.getChildren().addAll(numTixL, numTix);
+							vb1.setLayoutX(100);
+							vb1.setLayoutY(50);
+							pane7.getChildren().add(vb1);
+							numTix.setOnAction(new EventHandler<ActionEvent>(){
+								@Override public void handle(ActionEvent e){
+									finishPay.setVisible(true);
+									Integer price = 150;
+									rt.chargeFee(numTix.getValue(), price);
+								}
+							});
+						}
+					});
+					concertSr.setOnAction(new EventHandler<ActionEvent>(){
+						@Override public void handle(ActionEvent e){
+							Label numTixL = new Label("Select the number of Senior tickets you would like.");
+							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
+							amountOpt.add(1);
+							amountOpt.add(2);
+							amountOpt.add(3);
+							amountOpt.add(4);
+							amountOpt.add(5);
+							amountOpt.add(6);
+							amountOpt.add(7);
+							amountOpt.add(8);
+							amountOpt.add(9);
+							ObservableList<Integer> amountList = FXCollections.observableArrayList(amountOpt);
+							ComboBox<Integer> numTix = new ComboBox<Integer>();
+							numTix.setItems(amountList);
+							vb1.getChildren().addAll(numTixL, numTix);
+							vb1.setLayoutX(100);
+							vb1.setLayoutY(50);
+							pane7.getChildren().add(vb1);
+							numTix.setOnAction(new EventHandler<ActionEvent>(){
+								@Override public void handle(ActionEvent e){
+									finishPay.setVisible(true);
+									Integer price = 112;
+									rt.chargeFee(numTix.getValue(), price);
+								}
+							});
+						}
+					});
+					concertAdult.setToggleGroup(concertAges);
+					concertSr.setToggleGroup(concertAges);
+					vb2.getChildren().addAll(concertKid, concertAdult, concertSr);
+					vb2.setLayoutX(100);
+					vb2.setLayoutY(100);
+					pane7.getChildren().add(vb2);
+				}
+				else if(chosenOne == "sport"){
 					ToggleGroup concertAges = new ToggleGroup();
 					RadioButton concertKid = new RadioButton("Child: $75");
 					RadioButton concertAdult = new RadioButton("Adult: $150");
@@ -180,18 +276,171 @@ public class RoboGUI extends Application{
 							});
 						}
 					});
+					concertAdult.setOnAction(new EventHandler<ActionEvent>(){
+						@Override public void handle(ActionEvent e){
+							Label numTixL = new Label("Select the number of adult tickets you would like.");
+							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
+							amountOpt.add(1);
+							amountOpt.add(2);
+							amountOpt.add(3);
+							amountOpt.add(4);
+							amountOpt.add(5);
+							amountOpt.add(6);
+							amountOpt.add(7);
+							amountOpt.add(8);
+							amountOpt.add(9);
+							ObservableList<Integer> amountList = FXCollections.observableArrayList(amountOpt);;
+							ComboBox<Integer> numTix = new ComboBox<Integer>();
+							numTix.setItems(amountList);
+							vb1.getChildren().addAll(numTixL, numTix);
+							vb1.setLayoutX(100);
+							vb1.setLayoutY(50);
+							pane7.getChildren().add(vb1);
+							numTix.setOnAction(new EventHandler<ActionEvent>(){
+								@Override public void handle(ActionEvent e){
+									finishPay.setVisible(true);
+									Integer price = 150;
+									rt.chargeFee(numTix.getValue(), price);
+								}
+							});
+						}
+					});
+					concertSr.setOnAction(new EventHandler<ActionEvent>(){
+						@Override public void handle(ActionEvent e){
+							Label numTixL = new Label("Select the number of Senior tickets you would like.");
+							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
+							amountOpt.add(1);
+							amountOpt.add(2);
+							amountOpt.add(3);
+							amountOpt.add(4);
+							amountOpt.add(5);
+							amountOpt.add(6);
+							amountOpt.add(7);
+							amountOpt.add(8);
+							amountOpt.add(9);
+							ObservableList<Integer> amountList = FXCollections.observableArrayList(amountOpt);;
+							ComboBox<Integer> numTix = new ComboBox<Integer>();
+							numTix.setItems(amountList);
+							vb1.getChildren().addAll(numTixL, numTix);
+							vb1.setLayoutX(100);
+							vb1.setLayoutY(50);
+							pane7.getChildren().add(vb1);
+							numTix.setOnAction(new EventHandler<ActionEvent>(){
+								@Override public void handle(ActionEvent e){
+									finishPay.setVisible(true);
+									Integer price = 112;
+									rt.chargeFee(numTix.getValue(), price);
+								}
+							});
+						}
+					});
 					concertAdult.setToggleGroup(concertAges);
 					concertSr.setToggleGroup(concertAges);
 					vb2.getChildren().addAll(concertKid, concertAdult, concertSr);
 					vb2.setLayoutX(100);
 					vb2.setLayoutY(100);
 					pane7.getChildren().add(vb2);
-				}
-				else if(chosenOne == "sport"){
 
 				}
 				else{
-
+					ToggleGroup concertAges = new ToggleGroup();
+					RadioButton concertKid = new RadioButton("Child: $75");
+					RadioButton concertAdult = new RadioButton("Adult: $150");
+					RadioButton concertSr = new RadioButton("Senior: $112.50");
+					concertKid.setToggleGroup(concertAges);
+					concertKid.setOnAction(new EventHandler<ActionEvent>(){
+						@Override public void handle(ActionEvent e){
+							Label numTixL = new Label("Select the number of child tickets you would like.");
+							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
+							amountOpt.add(1);
+							amountOpt.add(2);
+							amountOpt.add(3);
+							amountOpt.add(4);
+							amountOpt.add(5);
+							amountOpt.add(6);
+							amountOpt.add(7);
+							amountOpt.add(8);
+							amountOpt.add(9);
+							ObservableList<Integer> amountList = FXCollections.observableArrayList(amountOpt);;
+							ComboBox<Integer> numTix = new ComboBox<Integer>();
+							numTix.setItems(amountList);
+							vb1.getChildren().addAll(numTixL, numTix);
+							vb1.setLayoutX(100);
+							vb1.setLayoutY(50);
+							pane7.getChildren().add(vb1);
+							numTix.setOnAction(new EventHandler<ActionEvent>(){
+								@Override public void handle(ActionEvent e){
+									finishPay.setVisible(true);
+									Integer price = 75;
+									rt.chargeFee(numTix.getValue(), price);
+								}
+							});
+						}
+					});
+					concertAdult.setOnAction(new EventHandler<ActionEvent>(){
+						@Override public void handle(ActionEvent e){
+							Label numTixL = new Label("Select the number of adult tickets you would like.");
+							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
+							amountOpt.add(1);
+							amountOpt.add(2);
+							amountOpt.add(3);
+							amountOpt.add(4);
+							amountOpt.add(5);
+							amountOpt.add(6);
+							amountOpt.add(7);
+							amountOpt.add(8);
+							amountOpt.add(9);
+							ObservableList<Integer> amountList = FXCollections.observableArrayList(amountOpt);;
+							ComboBox<Integer> numTix = new ComboBox<Integer>();
+							numTix.setItems(amountList);
+							vb1.getChildren().addAll(numTixL, numTix);
+							vb1.setLayoutX(100);
+							vb1.setLayoutY(50);
+							pane7.getChildren().add(vb1);
+							numTix.setOnAction(new EventHandler<ActionEvent>(){
+								@Override public void handle(ActionEvent e){
+									finishPay.setVisible(true);
+									Integer price = 150;
+									rt.chargeFee(numTix.getValue(), price);
+								}
+							});
+						}
+					});
+					concertSr.setOnAction(new EventHandler<ActionEvent>(){
+						@Override public void handle(ActionEvent e){
+							Label numTixL = new Label("Select the number of Senior tickets you would like.");
+							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
+							amountOpt.add(1);
+							amountOpt.add(2);
+							amountOpt.add(3);
+							amountOpt.add(4);
+							amountOpt.add(5);
+							amountOpt.add(6);
+							amountOpt.add(7);
+							amountOpt.add(8);
+							amountOpt.add(9);
+							ObservableList<Integer> amountList = FXCollections.observableArrayList(amountOpt);;
+							ComboBox<Integer> numTix = new ComboBox<Integer>();
+							numTix.setItems(amountList);
+							vb1.getChildren().addAll(numTixL, numTix);
+							vb1.setLayoutX(100);
+							vb1.setLayoutY(50);
+							pane7.getChildren().add(vb1);
+							numTix.setOnAction(new EventHandler<ActionEvent>(){
+								@Override public void handle(ActionEvent e){
+									finishPay.setVisible(true);
+									Integer price = 112;
+									rt.chargeFee(numTix.getValue(), price);
+								}
+							});
+						}
+					});
+					concertAdult.setToggleGroup(concertAges);
+					concertSr.setToggleGroup(concertAges);
+					vb2.getChildren().addAll(concertKid, concertAdult, concertSr);
+					vb2.setLayoutX(100);
+					vb2.setLayoutY(100);
+					pane7.getChildren().add(vb2);
 				}
 			}
 		});
@@ -338,9 +587,11 @@ public class RoboGUI extends Application{
 		finishPay.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				st1.setScene(userMenu);
-				eventPicker.setDisable(false);
 				pane7.getChildren().removeAll(vb1,vb2);
 				finishPay.setVisible(false);
+				vb1.getChildren().clear();
+				vb2.getChildren().clear();
+				eventPicker.setValue(null);
 			}
 		});
 
