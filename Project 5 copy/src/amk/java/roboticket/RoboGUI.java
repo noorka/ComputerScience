@@ -49,7 +49,7 @@ public class RoboGUI extends Application{
 
 
 	Pane pane1 = new Pane();
-	Scene welcomeSn = new Scene(pane1, 400,300);
+	Scene welcomeSn = new Scene(pane1, 600,500);
 	Text line1 = new Text (70, 60, "Welcome to RoboTicket by Anna Kroon");
 	Text line2 = new Text (70, 80, "Please enter your username and password.");
 	HBox uNameBx = new HBox();
@@ -61,7 +61,7 @@ public class RoboGUI extends Application{
 	Button logInBut = new Button("Log In");
 
 	Pane pane2 = new Pane();
-	Scene addUser = new Scene (pane2, 400,300);
+	Scene addUser = new Scene (pane2, 600,500);
 	VBox enterNameBx = new VBox();
 	TextField name = new TextField();
 	Label l3 = new Label("Last-name, Firstname: ");
@@ -83,18 +83,18 @@ public class RoboGUI extends Application{
 	Text dateFormatErr = new Text (50, 50, "Incorrect format.");
 
 	Pane pane3 = new Pane();
-	Scene userMenu = new Scene(pane3, 400,300);
+	Scene userMenu = new Scene(pane3, 600,500);
 	Button editProfile = new Button("Edit Profile");
 	Button orderTickets = new Button("Buy Tickets");
 
 	Pane pane4 = new Pane();
-	Scene ownerMenu = new Scene(pane4, 400,300);
+	Scene ownerMenu = new Scene(pane4, 600,500);
 	Button addMore = new Button("Add New User");
 	Button listAll = new Button("List All Users");
 
 
 	Pane pane5 = new Pane();
-	Scene userEdit = new Scene(pane5, 400,300);
+	Scene userEdit = new Scene(pane5, 600,500);
 	String currentUName = new String();
 	TextField newUName = new TextField();
 	String currentLogIn = new String();
@@ -107,7 +107,7 @@ public class RoboGUI extends Application{
 
 
 	Pane pane6 = new Pane();
-	Scene ownerEdit = new Scene(pane6, 400,300);
+	Scene ownerEdit = new Scene(pane6, 600,500);
 	String currentName = new String();
 	//Label nameL = new Label(currentName);
 	TextField newName = new TextField();
@@ -124,63 +124,63 @@ public class RoboGUI extends Application{
 	Button ownerEdited = new Button("Save Edits");
 
 	Pane pane7 = new Pane();
-	Scene ticketMenu = new Scene(pane7, 400,300);
+	Scene ticketMenu = new Scene(pane7, 600,500);
 	ComboBox<String> eventPicker = new ComboBox<String>();
 	Button finishPay = new Button("Finish Transaction");
 	VBox vb1 = new VBox();
 	VBox vb2 = new VBox();
 
 	Pane pane8 = new Pane();
-	Scene listMenu = new Scene(pane8, 400,300);
+	Scene listMenu = new Scene(pane8, 600,500);
 	ListView<User> listUs = new ListView<User>();
 
 
 	Pane pane9 = new Pane();
-	Scene errorPg = new Scene(pane9, 400,300);
+	Scene errorPg = new Scene(pane9, 600,500);
 	Text err = new Text("An error had occured.");
-	
+
 	public void userEditing (User thisUser){
 		currentUName = thisUser.getName();
 		currentLogIn = thisUser.getUsername();
 		currentPassword = thisUser.getPassword();
-		
+
 		Label nameUL = new Label(currentUName);
 		Label usernameUL = new Label(currentLogIn);
 		Label passwordUL = new Label(currentPassword);
-		
+
 		uEditingFields.getChildren().addAll(nameUL, newUName, usernameUL, newLogIn, passwordUL, newPassword);
 		pane5.getChildren().addAll(uEditingFields, userEdited);
-		
+
 		userEdited.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				st1.setScene(userMenu);// it does the thing, but doesn't change the stage... 
 				currentUName = newUName.getText();
 				currentLogIn = newLogIn.getText();
 				currentPassword = newPassword.getText();
-				
+
 				thisUser.setName(currentUName);
 				thisUser.setUsername(currentLogIn);
 				thisUser.setPassword(currentPassword);
 			}
 		});
-		
-		
+
+
 	}
-	
+
 	public void ownerEditing (User thisUser){
 		currentName = thisUser.getName();
 		currentUsername = thisUser.getUsername();
 		currentTotPay = thisUser.getPaidToDate().toString(); // this is also bad
 		currentDateJoin = thisUser.getDateJoined().toString(); // this makes everything bad
-		
+
 		Label nameL = new Label(currentName);
 		Label usernameL = new Label(currentUsername);
 		Label totPayL = new Label(currentTotPay);
 		Label dateJoinedL = new Label(currentDateJoin);
-		
+
 		editingFields.getChildren().addAll(nameL, newName, usernameL, newUsername, totPayL, newTotPay, dateJoinedL, newDateJoin);
 		pane6.getChildren().addAll(editingFields, ownerEdited);
-		
+
 		ownerEdited.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				st1.setScene(ownerMenu);// it does the thing, but doesn't change the stage... 
@@ -188,15 +188,15 @@ public class RoboGUI extends Application{
 				currentUsername = newUsername.getText();
 				currentTotPay = newTotPay.getText();
 				currentDateJoin = newDateJoin.getText();
-				
+
 				thisUser.setName(currentName);
 				thisUser.setUsername(currentUsername);
 				//thisUser.setDateJoined(currentDateJoin); THIS IS A PROBLEM
 				//thisUser.setPaidToDate(currentTotPay); THIS IS A PROBELEM
 			}
 		});
-		
-		
+
+
 	}
 
 	//buying a ticket
@@ -240,7 +240,7 @@ public class RoboGUI extends Application{
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
 									Integer price = 75;
-									rt.chargeFee(numTix.getValue(), price);
+									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
 						}
@@ -269,7 +269,7 @@ public class RoboGUI extends Application{
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
 									Integer price = 150;
-									rt.chargeFee(numTix.getValue(), price);
+									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
 						}
@@ -298,7 +298,7 @@ public class RoboGUI extends Application{
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
 									Integer price = 112;
-									rt.chargeFee(numTix.getValue(), price);
+									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
 						}
@@ -340,7 +340,7 @@ public class RoboGUI extends Application{
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
 									Integer price = 25;
-									rt.chargeFee(numTix.getValue(), price);
+									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
 						}
@@ -369,7 +369,7 @@ public class RoboGUI extends Application{
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
 									Integer price = 50;
-									rt.chargeFee(numTix.getValue(), price);
+									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
 						}
@@ -398,7 +398,7 @@ public class RoboGUI extends Application{
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
 									Integer price = 38;
-									rt.chargeFee(numTix.getValue(), price);
+									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
 						}
@@ -441,7 +441,7 @@ public class RoboGUI extends Application{
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
 									Integer price = 63;
-									rt.chargeFee(numTix.getValue(), price);
+									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
 						}
@@ -470,7 +470,7 @@ public class RoboGUI extends Application{
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
 									Integer price = 125;
-									rt.chargeFee(numTix.getValue(), price);
+									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
 						}
@@ -499,7 +499,7 @@ public class RoboGUI extends Application{
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
 									Integer price = 94;
-									rt.chargeFee(numTix.getValue(), price);
+									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
 						}
@@ -587,10 +587,10 @@ public class RoboGUI extends Application{
 
 		orderTickets.setLayoutX(70);
 		orderTickets.setLayoutY(100);
-		
+
 		ownerEdited.setLayoutX(70);
 		ownerEdited.setLayoutY(350);
-		
+
 
 
 		//Box Layouts
@@ -708,10 +708,6 @@ public class RoboGUI extends Application{
 			}
 		});
 		listUs.setOnMousePressed(new EventHandler<MouseEvent>(){
-			//so I think this is actually a button on the list user scene. 
-			//I need to register a listener on the ListView of all the users so that i can go in a edit the selected user
-			//i need to some how capture where the user is in the ArrayList, get all the relevant data, and be able to make changes
-			//then i need to be able to change all the things to their new things
 
 			public void handle(MouseEvent m){
 				User editingUser = listUs.getSelectionModel().getSelectedItem();
@@ -719,9 +715,10 @@ public class RoboGUI extends Application{
 				st1.setScene(ownerEdit);
 			}
 		});
-		
+
 		logOut.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
+				rt.persistUser(currentUser);
 				currentUser = null;
 				logInName.clear();
 				logInPass.clear();
@@ -738,6 +735,7 @@ public class RoboGUI extends Application{
 
 			}
 		});*/
+		//hi 
 
 		addThis.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
@@ -791,7 +789,7 @@ public class RoboGUI extends Application{
 				String passWrd = logInPass.getText();
 				User thisUser = rt.login(usName,passWrd);
 				if(thisUser != null){
-
+					currentUser = thisUser;
 					Integer i = thisUser.getUserID();
 					if(i==0){
 						st1.setScene(ownerMenu);
@@ -814,7 +812,7 @@ public class RoboGUI extends Application{
 		st1.show();
 	}
 	public void stop () {
-		rt.endGracefully();
+		rt.endGracefully(currentUser);
 	}
 	public static void main (String[] args){
 		Application.launch(RoboGUI.class,args);

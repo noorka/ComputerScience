@@ -148,9 +148,20 @@ public class RoboTicket {
 		}
 		return null;
 	}
-
-	public void endGracefully(){
+public void persistUser(User currentUser){
+	Integer thisUserID = currentUser.getUserID();
+	for(User user: userList){
+		if(thisUserID == user.getUserID()){
+			userList.remove(user);
+			userList.add(currentUser);
+		}
+	}
+}
+	public void endGracefully(User currentUser){
 		System.out.println("Thank you for using RoboTicket by Anna Kroon.");
+		if(currentUser!= null){
+			persistUser(currentUser);
+		}
 		try{
 			fileOS = new FileOutputStream(file);             
 			out = new ObjectOutputStream(fileOS);
@@ -179,9 +190,9 @@ public class RoboTicket {
 
 	}
 	
-	public void chargeFee(Integer numTix, Integer price){
+	public void chargeFee(Integer numTix, Integer price, User currentUser){
 		Integer fee = numTix*price;
-		User.paidAmount(fee);
+		currentUser.paidAmount(fee);
 		
 	}
 	/**
