@@ -18,25 +18,18 @@ public class User implements Serializable{
 	private Boolean isUser = true;
 	private static Integer nextID;
 	private Integer userID;
-	private Date birthday; //This was added to User because it was required for Owner
-	private String paymentInfo = "None";
-	private String paymentType = null;
-	private Integer payAccount = 0;
+	private Date birthday; 
+	private Payment paymentInfo = null;
 	private Integer paidToDate = 0;
 
-	/**
-	 * This constructs the User class with all its required elements.
-	 * @param name, paymentInfo, birthday, username
-	 * @return none
-	 */
-	public User(String username, String name, String password, String paymentInfo, Date birthday){
+	public User(String username, String name, String password, Date birthday){
 		this.setUsername(username);
 		this.setPassword(password);
 		this.setName(name);
 		this.setDateJoined(new GregorianCalendar());
 		this.setBirthday(birthday);
 		this.setIsUser(isUser);
-		this.setPaymentInfo(paymentInfo);
+		//this.setPaymentInfo(paymentInfo);
 		this.setPaidToDate(paidToDate);
 		if(nextID == null){
 			this.setUserID(0);
@@ -46,77 +39,19 @@ public class User implements Serializable{
 			this.setUserID(nextID++);
 		}
 	}
-	/**
-	 * This function checks for a valid username of at least 6 characters.
-	 * @param username String
-	 * @return boolean
-	 */
+
 	public static Boolean isValidUsername(String username){
 		if(username.length() < MIN_USERNAME){
-			//System.out.println("Invalid username, too few characters. Please try again.");
 			return false;
 		}
 		return true;
 	}
-	/**
-	 * This function allows the user to pick their payment method via scanned in keyboard data.
-	 * @param none
-	 * @return none
-	 */
-	public void pickPaymt(){
-		Scanner sc = new Scanner(System.in);
-		int choice;
-		System.out.println("Please Chose a payment type:");
-		System.out.println("1) Credit\t2) Debit\t3) Apple Pay\t4) Android Pay");
-		choice = sc.nextInt();
-		switch(choice){
-		case 1:
-			System.out.println("Credit:");
-			System.out.println("Enter Name:");
-			String cardName = sc.nextLine();
-			System.out.println("Enter Card Number:");
-			int cardNum = sc.nextInt();
-			break;
-		case 2:
-			System.out.println("Debit:");
-			System.out.println("Enter Name:");
-			String debitName = sc.nextLine();
-			System.out.println("Enter Card Number:");
-			int debitNum = sc.nextInt();
-			break;
-		case 3:
-			System.out.println("Apple Pay:");
-			System.out.println("Enter Name:");
-			String appleName = sc.nextLine();
-			System.out.println("Enter Account Number:");
-			int appledNum = sc.nextInt();
-			break;
-		case 4:
-			System.out.println("Android Pay:");
-			System.out.println("Enter Name:");
-			String droidName = sc.nextLine();
-			System.out.println("Enter Account Number:");
-			int droidNum = sc.nextInt();
-			break;
-		default:
-			System.out.println("Invalid input, try again.");
-		}
-	 
-	}
-	/**
-	 * This functions adds the amount spent in the current action to the account's total amount paid.
-	 * @param int amount
-	 * @return none
-	 */
+
 	public void paidAmount (int amount){
 		int tempPay = amount + paidToDate;
 		paidToDate = tempPay;
 	}
-	/**
-	 * This function checks for a valid username with a hyphen in the lastname, a comma, and a firstname.
-	 * @param String name
-	 * @return boolean
-	 */
+	
 	public static Boolean isValidName(String name){
 		if(!name.matches(NAME_REGEX)){
 			//System.out.println("Invalid name, please try again. Format is Lastname, Firstname.");
@@ -124,16 +59,7 @@ public class User implements Serializable{
 		}
 		return true;
 	}
-	//This is done as the serialized User object are being read in from the file. 
-	/*public void userFromFile(User myUser){
-		//all the saved user data is supposed to be a parameter
-		//this is supposed to create a user from a file then add it to an ArrayList
-	}*/
-	/**
-	 * This function gets the number of years between the user's account creation and the current date. Any time less than a year is presented as 0.
-	 * @param none
-	 * @return long years
-	 */
+
 	public long getYears(){
 		ZonedDateTime myZdt = dateJoined.toZonedDateTime();
 		ZoneId z = ZoneId.of( "America/Montreal" );
@@ -251,9 +177,9 @@ public class User implements Serializable{
 	 * @param String paymentInfo
 	 * @return none
 	 */
-	public void setPaymentInfo(String paymentInfo) {
+	/*public void setPaymentInfo(String paymentInfo) {
 		this.paymentInfo = paymentInfo;
-	}
+	}*/
 	/**
 	 * This function gets the amount paid to date for the toString method.
 	 * @param none
@@ -275,5 +201,13 @@ public class User implements Serializable{
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Payment getPaymentInfo() {
+		return paymentInfo;
+	}
+
+	public void setPaymentInfo(Payment paymentInfo) {
+		this.paymentInfo = paymentInfo;
 	}
 }

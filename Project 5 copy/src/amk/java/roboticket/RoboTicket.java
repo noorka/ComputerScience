@@ -65,98 +65,24 @@ public class RoboTicket {
 		return returnVal;
 	}
 
-	/**
-	 * This function takes user input from the keyboard then uses a switch statement to produce the proper action.
-	 * @param none
-	 * @return none
-	 */
-	/*public void doMenu(){
-		try{
-			while(true){
-				printMenu();
-				int userInput = sck.nextInt();
-				switch(userInput){
-				case 0:
-					endGracefully();
-					System.exit(0);
-					break;
-				case 1:
-					//Log In
-					login();
-					break;
-				case 2:
-					//enter users
-					if(currentUser.getUserID() == 0){
-						newUser();
-					}
-					else{
-						System.out.println("Only the Owner can create a new user. Please select another option.");
-					}
-					break;
-				case 3:
-					//list Users
-					listUsers(userList);
-					break;
-				case 4:
-					//Change user data
-					System.out.println("Not available at this time.");
-					break;
-				case 5:
-					//Close account
-					System.out.println("Not available at this time.");
-					break;
-				case 6:
-					//Buy Tickets
-					System.out.println("Not available at this time.");
-					break;
-				default:
-					System.out.println("Invalid input, try again.");
-				}
-			}
-		}
-		catch (Exception e){
-			e.getMessage();
-		}
-		finally{
-			endGracefully();
-		}
-	}*/
-	
-	/*private void listUsers(ArrayList <User> myList){
-		String titles = "UserID\tUsername       Name                   Is User  Member Years    Paid to Date";
-		//need to display id, login name, isUser, get years, paidToDate
-		System.out.println("LIST THE USERS");
-		System.out.println(titles);
-		System.out.println("-----------------------------------------------------------------------------------------");
-		for(User thisUser: myList){
-			System.out.print(thisUser.toString());
-		}
-	}*/
-
-	protected User newUser(String username, String name, String password, String paymentInfo, Date birthday){ 
-		User myUser = new User(username, name, password,paymentInfo, birthday);
+	protected User newUser(String username, String name, String password, Date birthday){ 
+		User myUser = new User(username, name, password, birthday);
 		userList.add(myUser);
 		return myUser;
 	}
 	protected User login (String usersName, String passWord){
 		for(User user: userList){
-			if(usersName.equals(user.getUsername())){
-				if(passWord.equals(user.getPassword())){
-					return user;
-				}
+			if(usersName.equals(user.getUsername()) && passWord.equals(user.getPassword()) && user.getIsUser() == true){
+				return user;
 			}
 		}
 		return null;
 	}
-public void persistUser(User currentUser){
-	Integer thisUserID = currentUser.getUserID();
-	for(User user: userList){
-		if(thisUserID == user.getUserID()){
-			userList.remove(user);
-			userList.add(currentUser);
-		}
+	public void persistUser(User currentUser){
+		Integer thisUserID = currentUser.getUserID();
+		userList.set(currentUser.getUserID(), currentUser);
+
 	}
-}
 	public void endGracefully(User currentUser){
 		System.out.println("Thank you for using RoboTicket by Anna Kroon.");
 		if(currentUser!= null){
@@ -182,31 +108,18 @@ public void persistUser(User currentUser){
 			}
 		}
 		try {
-			//out.close();
 			fileOS.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}             
 
 	}
-	
+
 	public void chargeFee(Integer numTix, Integer price, User currentUser){
 		Integer fee = numTix*price;
 		currentUser.paidAmount(fee);
-		
+
 	}
-	/**
-	 * This is the main function. It launches the GUI window, welcomes the user, and proceeds with the doMenu and fileScan
-	 * functions
-	 * @param String args
-	 * @return none
-	 */
-	//public static void main (String[] args){
-	//Application.launch(RoboGUI.class,args);
-	//RoboTicket rt = new RoboTicket();
-	//System.out.println("Welcome to P4: RoboTicket by Anna Kroon.");
-	//rt.fileScan();
-	//rt.doMenu();
-	//}
+
 }
 

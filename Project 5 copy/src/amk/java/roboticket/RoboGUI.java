@@ -3,6 +3,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import amk.java.roboticket.User;
@@ -101,8 +102,10 @@ public class RoboGUI extends Application{
 	TextField newLogIn = new TextField();
 	String currentPassword = new String();
 	TextField newPassword = new TextField();
+	ComboBox<String> payType = new ComboBox<String>();
 	VBox uEditingFields = new VBox();
 	Button userEdited = new Button("Save Edits");
+	Button closeAccount = new Button("Close Account");
 	//how do I even do payment info?
 
 
@@ -140,6 +143,79 @@ public class RoboGUI extends Application{
 	Text err = new Text("An error had occured.");
 
 	public void userEditing (User thisUser){
+		ArrayList<String> payOption = new ArrayList<String>();
+		payOption.add("Apple Pay");
+		payOption.add("Android Pay");
+		payOption.add("Credit Card");
+		ObservableList<String> payOpt = FXCollections.observableArrayList(payOption);
+		payType.setItems(payOpt); 
+		
+		payType.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				if(payType.getValue() == "Apple Pay"){
+					VBox paymentBx = new VBox();
+					Label usernameL = new Label("Enter Apple Pay Username:");
+					TextField username = new TextField();
+					Label passwordL = new Label("Enter Apple Pay Password:");
+					TextField password = new TextField();
+					
+					paymentBx.getChildren().addAll(usernameL, username, passwordL, password);
+					paymentBx.setLayoutX(70);
+					paymentBx.setLayoutY(200);
+					pane5.getChildren().add(paymentBx);
+					
+					String theUser = username.getText();
+					String thePass = password.getText();
+					
+					Payment myPay = new ApplePay(theUser,thePass);
+					
+					thisUser.setPaymentInfo(myPay);
+				}
+				else if(payType.getValue() == "Android Pay"){
+					VBox paymentBx = new VBox();
+					Label usernameL = new Label("Enter Android Pay Username:");
+					TextField username = new TextField();
+					Label passwordL = new Label("Enter Android Pay Password:");
+					TextField password = new TextField();
+					
+					paymentBx.getChildren().addAll(usernameL, username, passwordL, password);
+					paymentBx.setLayoutX(70);
+					paymentBx.setLayoutY(200);
+					pane5.getChildren().add(paymentBx);
+					
+					String theUser = username.getText();
+					String thePass = password.getText();
+					
+					Payment myPay = new AndroidPay(theUser,thePass);
+					
+					thisUser.setPaymentInfo(myPay);
+				}
+				else{
+					VBox paymentBx = new VBox();
+					Label usernameL = new Label("Enter Username:");
+					TextField username = new TextField();
+					Label cardNumberL = new Label("Enter Credit Card Number:");
+					TextField cardNumber = new TextField();
+					Label cardSVNL = new Label("Enter SVN:");
+					TextField cardSVN = new TextField();
+					Label expireL = new Label("Enter Expiration Date MM/YY:");
+					TextField expire = new TextField();
+					
+					
+					paymentBx.getChildren().addAll(usernameL, username, cardNumberL, cardNumber, cardSVNL, cardSVN, expireL, expire);
+					paymentBx.setLayoutX(70);
+					paymentBx.setLayoutY(200);
+					pane5.getChildren().add(paymentBx);
+					
+					String theUser = username.getText();
+					
+					Payment myPay = new CreditCard(theUser);
+					
+					thisUser.setPaymentInfo(myPay);
+				}
+			}
+		});
+		
 		currentUName = thisUser.getName();
 		currentLogIn = thisUser.getUsername();
 		currentPassword = thisUser.getPassword();
@@ -147,8 +223,9 @@ public class RoboGUI extends Application{
 		Label nameUL = new Label(currentUName);
 		Label usernameUL = new Label(currentLogIn);
 		Label passwordUL = new Label(currentPassword);
+		Label paymentL = new Label("Select Payment Type:");
 
-		uEditingFields.getChildren().addAll(nameUL, newUName, usernameUL, newLogIn, passwordUL, newPassword);
+		uEditingFields.getChildren().addAll(nameUL, newUName, usernameUL, newLogIn, passwordUL, newPassword, paymentL, payType);
 		pane5.getChildren().addAll(uEditingFields, userEdited);
 
 		userEdited.setOnAction(new EventHandler<ActionEvent>(){
@@ -168,10 +245,13 @@ public class RoboGUI extends Application{
 	}
 
 	public void ownerEditing (User thisUser){
+		SimpleDateFormat fmt = new SimpleDateFormat("mm-dd-yyyy");
+		GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
+		//cal.setTime();
 		currentName = thisUser.getName();
 		currentUsername = thisUser.getUsername();
 		currentTotPay = thisUser.getPaidToDate().toString(); // this is also bad
-		currentDateJoin = thisUser.getDateJoined().toString(); // this makes everything bad
+		currentDateJoin = fmt.format(thisUser.getDateJoined().getTime()); // this makes everything bad
 
 		Label nameL = new Label(currentName);
 		Label usernameL = new Label(currentUsername);
@@ -183,7 +263,6 @@ public class RoboGUI extends Application{
 
 		ownerEdited.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
-				st1.setScene(ownerMenu);// it does the thing, but doesn't change the stage... 
 				currentName = newName.getText();
 				currentUsername = newUsername.getText();
 				currentTotPay = newTotPay.getText();
@@ -191,8 +270,14 @@ public class RoboGUI extends Application{
 
 				thisUser.setName(currentName);
 				thisUser.setUsername(currentUsername);
-				//thisUser.setDateJoined(currentDateJoin); THIS IS A PROBLEM
-				//thisUser.setPaidToDate(currentTotPay); THIS IS A PROBELEM
+				try {
+					cal.setTime(fmt.parse(currentDateJoin));
+					thisUser.setDateJoined(cal); 
+					thisUser.setPaidToDate(Integer.parseInt(currentTotPay)); 
+					st1.setScene(ownerMenu);
+				} catch (ParseException e1) {
+					dateJoinedL.setTextFill(Color.RED);
+				}
 			}
 		});
 
@@ -590,6 +675,9 @@ public class RoboGUI extends Application{
 
 		ownerEdited.setLayoutX(70);
 		ownerEdited.setLayoutY(350);
+		
+		closeAccount.setLayoutX(70);
+		closeAccount.setLayoutX(200);
 
 
 
@@ -643,7 +731,7 @@ public class RoboGUI extends Application{
 		pane2.getChildren().add(addInfoBx);
 		pane3.getChildren().addAll(logOut, editProfile, orderTickets);
 		pane4.getChildren().addAll(logOut, addMore, listAll);
-		pane5.getChildren().add(backUser);
+		pane5.getChildren().addAll(backUser, closeAccount);
 		pane6.getChildren().addAll(backList);
 		pane7.getChildren().addAll(eventPicker, finishPay);
 		pane8.getChildren().addAll(backOwner);
@@ -665,7 +753,16 @@ public class RoboGUI extends Application{
 				eventPicker.setValue(null);
 			}
 		});
-
+		closeAccount.setOnAction(new EventHandler<ActionEvent>(){
+			@Override public void handle(ActionEvent e){
+				st1.setScene(welcomeSn);
+				currentUser.setIsUser(false);
+				rt.persistUser(currentUser);
+				currentUser = null;
+				logInName.clear();
+				logInPass.clear();
+			}
+		});
 		backList.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				st1.setScene(listMenu);
@@ -730,12 +827,6 @@ public class RoboGUI extends Application{
 
 			}
 		});
-		/*selected.setOnAction(new EventHandler<ActionEvent>(){
-			@Override public void handle(ActionEvent e){
-
-			}
-		});*/
-		//hi 
 
 		addThis.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
@@ -770,7 +861,7 @@ public class RoboGUI extends Application{
 						}
 					}
 				}
-				currentUser = rt.newUser(loginName, usersName, myPass, payInfo, birthdate);
+				currentUser = rt.newUser(loginName, usersName, myPass, birthdate);
 				name.clear();
 				userName.clear();
 				secretPass.clear();
