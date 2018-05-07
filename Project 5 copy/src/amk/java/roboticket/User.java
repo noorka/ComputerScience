@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
-/**@author Anna Kroon @date 04/01/2018 @version 1 */
+/**@author Anna Kroon @date 04/20/2018 @version 1 */
 public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private static final int MIN_USERNAME = 6;
@@ -20,8 +20,12 @@ public class User implements Serializable{
 	private Integer userID;
 	private Date birthday; 
 	private Payment paymentInfo = null;
-	private Integer paidToDate = 0;
-
+	private Double paidToDate = 0.0;
+	/**
+	 * This constructs a user.
+	 * @param String username, String name, String password, Date birthday
+	 * @return User
+	 */
 	public User(String username, String name, String password, Date birthday){
 		this.setUsername(username);
 		this.setPassword(password);
@@ -39,19 +43,22 @@ public class User implements Serializable{
 			this.setUserID(nextID++);
 		}
 	}
-
+	/**
+	 * This checks the validity of the entered username.
+	 * @param String username
+	 * @return Boolean
+	 */
 	public static Boolean isValidUsername(String username){
 		if(username.length() < MIN_USERNAME){
 			return false;
 		}
 		return true;
 	}
-
-	public void paidAmount (int amount){
-		int tempPay = amount + paidToDate;
-		paidToDate = tempPay;
-	}
-	
+	/**
+	 * This checks the validity of the entered name.
+	 * @param String name
+	 * @return Boolean
+	 */
 	public static Boolean isValidName(String name){
 		if(!name.matches(NAME_REGEX)){
 			//System.out.println("Invalid name, please try again. Format is Lastname, Firstname.");
@@ -59,7 +66,11 @@ public class User implements Serializable{
 		}
 		return true;
 	}
-
+	/**
+	 * This calcualtes the number of years a user has been registered. 
+	 * @param none
+	 * @return long
+	 */
 	public long getYears(){
 		ZonedDateTime myZdt = dateJoined.toZonedDateTime();
 		ZoneId z = ZoneId.of( "America/Montreal" );
@@ -74,8 +85,17 @@ public class User implements Serializable{
 	 */
 	public String toString(){
 		long years = getYears();
-		String printOut = String.format("%05d\t%-15s\t%-20s\t%-5b\t%-10d\t%-10d\n", getUserID(), getUsername(), getName(), getIsUser(), years, getPaidToDate());
+		String printOut = String.format("%05d %20s %20s %20b %20d %20f", getUserID(), getUsername(), getName(), getIsUser(), years, getPaidToDate());
 		return printOut;
+	}
+	/**
+	 * This function adds the amount spent in the current action to the account's total amount paid.
+	 * @param Double amount
+	 * @return none
+	 */
+	public void paidAmount (Double amount){
+		Double tempPay = amount + paidToDate;
+		paidToDate = tempPay;
 	}
 	/**
 	 * This is a static function that sets the nextID.
@@ -172,41 +192,52 @@ public class User implements Serializable{
 	public void setIsUser(Boolean isUser) {
 		this.isUser = isUser;
 	}
-	/**
-	 * This function sets the paymentInfo to the default value.
-	 * @param String paymentInfo
-	 * @return none
-	 */
-	/*public void setPaymentInfo(String paymentInfo) {
-		this.paymentInfo = paymentInfo;
-	}*/
+
 	/**
 	 * This function gets the amount paid to date for the toString method.
 	 * @param none
-	 * @return Integer paidToDate
+	 * @return Double paidToDate
 	 */
-	public Integer getPaidToDate() {
+	public Double getPaidToDate() {
 		return paidToDate;
 	}
 	/**
 	 * This function sets the paid to date to a default value. 
-	 * @param Integer paidToDate
+	 * @param Double paidToDate
 	 * @return paidToDate
 	 */
-	public void setPaidToDate(Integer paidToDate) {
+	public void setPaidToDate(Double paidToDate) {
 		this.paidToDate = paidToDate;
 	}
+	/**
+	 * This function gets the password.
+	 * @param none
+	 * @return String password
+	 */
 	public String getPassword() {
 		return password;
 	}
+	/**
+	 * This function sets the password to a default value. 
+	 * @param String password
+	 * @return none
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	/**
+	 * This function gets the payment information.
+	 * @param none
+	 * @return Payment paymentInfo
+	 */
 	public Payment getPaymentInfo() {
 		return paymentInfo;
 	}
-
+	/**
+	 * This function sets the payment info to a default value. 
+	 * @param Payment paymentInfo
+	 * @return none
+	 */
 	public void setPaymentInfo(Payment paymentInfo) {
 		this.paymentInfo = paymentInfo;
 	}

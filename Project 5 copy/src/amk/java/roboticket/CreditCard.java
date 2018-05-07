@@ -1,38 +1,70 @@
 package amk.java.roboticket;
-
-import java.util.Date;
+/**@author Anna Kroon @date 04/20/2018 @version 1 */
 
 public class CreditCard extends Payment{
-	Integer cardNumber;
-	Integer cardSVN;
-	Date expire;
-
-	public CreditCard(String username, String password, Integer cardNumber, Integer cardSVN, Date expire) {
+	String cardNumber;
+	String cardSVN;
+	String expire;
+	/**
+	 * This function constructs a credit card, a child of payment.
+	 * @param String username, String password, String cardNumber, String cardSVN, String expire
+	 * @return CreditCard
+	 */
+	public CreditCard(String username, String password, String cardNumber, String cardSVN, String expire) {
 		super(username, null);
 		this.setCardNumber(cardNumber);
-		//this.setCardSVN(cardSVN);
+		this.setCardSVN(cardSVN);
 		this.setExpire(expire);
 	}
-	public void setCardNumber(Integer cardNumber){
+	/**
+	 * This method sets the card number.
+	 * @param String card number
+	 * @return none
+	 */
+	public void setCardNumber(String  cardNumber){
 
 		this.cardNumber = cardNumber;
 	}
-	public Integer getCardNumber() throws Exception{
-		
+	/**
+	 * This function gets the card number.
+	 * @param none
+	 * @return String cardNumber
+	 */
+	public String getCardNumber(){
+
 		return cardNumber;
 	}
-	public void setCardSVN(Integer cardSVN) throws Exception{
-		if(cardSVN > 999 || cardSVN < 100) throw new Exception();
+	/**
+	 * This method sets the card's SVN number.
+	 * @param String cardSVN
+	 * @return none
+	 */
+	public void setCardSVN(String  cardSVN) {
 		this.cardSVN = cardSVN;
 	}
-	public Integer getCardSVN(){
+	/**
+	 * This function gets the card's SVN number.
+	 * @param none
+	 * @return String CardSVN
+	 */
+	public String  getCardSVN(){
 		return cardSVN;
 	}
-	public void setExpire(Date expire){
+	/**
+	 * This method sets the expiration date.
+	 * @param String expire
+	 * @return none
+	 */
+	public void setExpire(String expire){
 
 		this.expire = expire;
 	}
-	public Date getExpire(){
+	/**
+	 * This function gets the expiration date.
+	 * @param none
+	 * @return String expire
+	 */
+	public String getExpire(){
 		return expire;
 	}
 

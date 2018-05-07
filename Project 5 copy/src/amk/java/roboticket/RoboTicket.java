@@ -7,15 +7,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
-
-//import javafx.application.Application;
-/**@author Anna Kroon @date 04/01/2018 @version 1 */
+/**@author Anna Kroon @date 04/20/2018 @version 1 */
 
 public class RoboTicket {
 	ArrayList<User> userList = new ArrayList<User>();
@@ -25,8 +21,13 @@ public class RoboTicket {
 	FileInputStream fileIS = null;
 	Scanner sck = new Scanner(System.in);
 	File file = new File("database.dat");
-	//User currentUser;
 
+	/**
+	 * This streams in data from the object file and returns a different value depending upon the case it hits (no file, 
+	 * good file, or bad file) so that the GUI function can handle them properly.
+	 * @param none
+	 * @return Integer
+	 */
 	public Integer fileScan(){
 		Integer newIDIn = null;
 		Integer returnVal = -1;
@@ -43,14 +44,12 @@ public class RoboTicket {
 
 		}
 		catch(FileNotFoundException fnf){
-			//newUser();
 			returnVal = 1;
 		}
 		catch(EOFException eof){
 			if(!userList.isEmpty()) returnVal= 2;
 		}
 		catch(Exception d){
-			//catching everything
 			d.printStackTrace();
 		}
 		finally{
@@ -64,12 +63,23 @@ public class RoboTicket {
 		}
 		return returnVal;
 	}
-
+	/**
+	 * This creates a new user, adds them to the array list, and returns the user so that it can be set as the current 
+	 * user in the GUI.
+	 * @param String username, String name, String password, Date birthday
+	 * @return User
+	 */
 	protected User newUser(String username, String name, String password, Date birthday){ 
 		User myUser = new User(username, name, password, birthday);
 		userList.add(myUser);
 		return myUser;
 	}
+	/**
+	 * This compares a given username and password to those in the existing list. It also checks to ensure the user is 
+	 * still a user in the system. If the user is matched and valid it will be passed back to the GUI.
+	 * @param String usersName, String passWord
+	 * @return User
+	 */
 	protected User login (String usersName, String passWord){
 		for(User user: userList){
 			if(usersName.equals(user.getUsername()) && passWord.equals(user.getPassword()) && user.getIsUser() == true){
@@ -78,11 +88,21 @@ public class RoboTicket {
 		}
 		return null;
 	}
+	/**
+	 * This ensures that any changes made to a user will be reflected in the array list of users. 
+	 * @param User currentUser
+	 * @return none
+	 */
 	public void persistUser(User currentUser){
 		Integer thisUserID = currentUser.getUserID();
 		userList.set(currentUser.getUserID(), currentUser);
 
 	}
+	/**
+	 * This reads data out to the file, closes everything, and prints a nice thank you message to the console.
+	 * @param User currentUser
+	 * @return none
+	 */
 	public void endGracefully(User currentUser){
 		System.out.println("Thank you for using RoboTicket by Anna Kroon.");
 		if(currentUser!= null){
@@ -114,9 +134,14 @@ public class RoboTicket {
 		}             
 
 	}
-
-	public void chargeFee(Integer numTix, Integer price, User currentUser){
-		Integer fee = numTix*price;
+	/**
+	 * This takes the amount of tickets selected and the price for the selected type to add the proper amount to the 
+	 * user's paidToDate.
+	 * @param Integer numTix, Double price, User currentUser
+	 * @return none
+	 */
+	public void chargeFee(Integer numTix, Double price, User currentUser){
+		Double fee = numTix*price;
 		currentUser.paidAmount(fee);
 
 	}

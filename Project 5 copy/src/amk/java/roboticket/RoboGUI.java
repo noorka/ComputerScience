@@ -4,14 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
-
 import amk.java.roboticket.User;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,7 +21,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-//import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -79,11 +75,11 @@ public class RoboGUI extends Application{
 	VBox addInfoBx = new VBox();
 	HBox buttonBx = new HBox();
 	Button addThis = new Button("Add User");
-	HBox errBx = new HBox();
+	VBox errBx = new VBox();
 	Label userPromptL = new Label ("Please enter the new user's information:");
-	Text invalidUsername = new Text(50,50, "Invalid username, too few characters. Please try again.");
-	Text invalidName = new Text(50,50, "Please enter a valid name in the format Lastname, Firstname.");
-	Text dateFormatErr = new Text (50, 50, "Incorrect format.");
+	Text invalidUsername = new Text("Invalid username, too few characters. Please try again.");
+	Text invalidName = new Text("Please enter a valid name in the format Lastname, Firstname.");
+	Text dateFormatErr = new Text ("Incorrect date format. mm-dd-yyyy");
 
 	Pane pane3 = new Pane();
 	Scene userMenu = new Scene(pane3, 600,500);
@@ -113,9 +109,19 @@ public class RoboGUI extends Application{
 	ComboBox<String> payType = new ComboBox<String>();
 	VBox uEditingFields = new VBox();
 	HBox uEditingBut = new HBox();
+	TextField username = new TextField();
+	TextField password = new TextField();
+	TextField cardNumber = new TextField();
+	TextField cardSVN = new TextField();
+	TextField expire = new TextField();
+	Payment myPay;
+	Label nameUL = new Label("Name:");
+	Label usernameUL = new Label("Username:");
+	Label passwordUL = new Label("Password:");
+	Label paymentL = new Label("Select Payment Type:");
 	Button userEdited = new Button("Save Edits");
+	Label editTitle = new Label("Please enter new info:");
 	Button closeAccount = new Button("Close Account");
-	//how do I even do payment info?
 
 
 	Pane pane6 = new Pane();
@@ -130,6 +136,11 @@ public class RoboGUI extends Application{
 	TextField newDateJoin = new TextField();
 	VBox editingFields = new VBox();
 	HBox editingBut = new HBox();
+	Label nameL = new Label("Name:");
+	Label usernameL = new Label("Username:");
+	Label totPayL = new Label("Total Paid To Date:");
+	Label dateJoinedL = new Label("Date Joined:");
+	Label editPrompt = new Label("Edit this user's information:");
 	Button ownerEdited = new Button("Save Edits");
 	Button backList = new Button ("Back");
 
@@ -143,12 +154,19 @@ public class RoboGUI extends Application{
 	Pane pane8 = new Pane();
 	Scene listMenu = new Scene(pane8, 600,500);
 	ListView<User> listUs = new ListView<User>();
+	VBox listBx = new VBox();
+	Label listL = new Label("ID Number\tUsername\tName\tUser Status\tYears Active\tAmount Paid");
 
 
 	Pane pane9 = new Pane();
 	Scene errorPg = new Scene(pane9, 600,500);
 	Text err = new Text(200, 200, "An error had occured.");
 
+	/**
+	 * This creates all of the user editing options and functions.
+	 * @param User thisUser
+	 * @return none
+	 */
 	public void userEditing (User thisUser){
 		ArrayList<String> payOption = new ArrayList<String>();
 		payOption.add("Apple Pay");
@@ -162,21 +180,14 @@ public class RoboGUI extends Application{
 				if(payType.getValue() == "Apple Pay"){
 					VBox paymentBx = new VBox();
 					Label usernameL = new Label("Enter Apple Pay Username:");
-					TextField username = new TextField();
 					Label passwordL = new Label("Enter Apple Pay Password:");
-					TextField password = new TextField();
+
 
 					paymentBx.getChildren().addAll(usernameL, username, passwordL, password);
 					paymentBx.setLayoutX(150);
 					paymentBx.setLayoutY(250);
 					pane5.getChildren().add(paymentBx);
 
-					String theUser = username.getText();
-					String thePass = password.getText();
-
-					Payment myPay = new ApplePay(theUser,thePass);
-
-					thisUser.setPaymentInfo(myPay);
 				}
 				else if(payType.getValue() == "Android Pay"){
 					VBox paymentBx = new VBox();
@@ -189,37 +200,19 @@ public class RoboGUI extends Application{
 					paymentBx.setLayoutX(150);
 					paymentBx.setLayoutY(250);
 					pane5.getChildren().add(paymentBx);
-
-					String theUser = username.getText();
-					String thePass = password.getText();
-
-					Payment myPay = new AndroidPay(theUser,thePass);
-
-					thisUser.setPaymentInfo(myPay);
 				}
 				else{
 					VBox paymentBx = new VBox();
 					Label usernameL = new Label("Enter Username:");
-					TextField username = new TextField();
 					Label cardNumberL = new Label("Enter Credit Card Number:");
-					TextField cardNumber = new TextField();
 					Label cardSVNL = new Label("Enter SVN:");
-					TextField cardSVN = new TextField();
 					Label expireL = new Label("Enter Expiration Date MM/YY:");
-					TextField expire = new TextField();
 
 
 					paymentBx.getChildren().addAll(usernameL, username, cardNumberL, cardNumber, cardSVNL, cardSVN, expireL, expire);
 					paymentBx.setLayoutX(150);
 					paymentBx.setLayoutY(250);
 					pane5.getChildren().add(paymentBx);
-
-					String theUser = username.getText();
-
-					Payment myPay = null; 
-					//= new CreditCard(theUser);
-
-					thisUser.setPaymentInfo(myPay);
 				}
 			}
 		});
@@ -228,65 +221,86 @@ public class RoboGUI extends Application{
 		currentLogIn = thisUser.getUsername();
 		currentPassword = thisUser.getPassword();
 
-		newPassword.setPromptText(currentPassword);
-		newLogIn.setPromptText(currentLogIn);
-		newUName.setPromptText(currentUName);
+		newPassword.setText(currentPassword);
+		newLogIn.setText(currentLogIn);
+		newUName.setText(currentUName);
 
-		Label editTitle = new Label("Please enter new info:");
 		editTitle.setFont(f1);
 
-		Label nameUL = new Label("Name:");
-		Label usernameUL = new Label("Username:");
-		Label passwordUL = new Label("Password:");
-		Label paymentL = new Label("Select Payment Type:");
 
-		uEditingFields.getChildren().addAll(editTitle, nameUL, newUName, usernameUL, newLogIn, passwordUL, newPassword, paymentL, payType);
-		uEditingFields.setLayoutX(150);
-		uEditingFields.setLayoutY(50);
 		pane5.getChildren().addAll(uEditingFields);
 
 		userEdited.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
-				st1.setScene(userMenu);// it does the thing, but doesn't change the stage... 
+
 				currentUName = newUName.getText();
 				currentLogIn = newLogIn.getText();
 				currentPassword = newPassword.getText();
 
+
 				thisUser.setName(currentUName);
 				thisUser.setUsername(currentLogIn);
 				thisUser.setPassword(currentPassword);
+
+				if(payType.getValue() =="Apple Pay"){
+					String theUser = username.getText();
+					String thePass = password.getText();
+
+					myPay = new ApplePay(theUser,thePass);
+
+					thisUser.setPaymentInfo(myPay);
+				}
+				else if(payType.getValue() == "Android Pay"){
+
+					String theUser = username.getText();
+					String thePass = password.getText();
+
+					myPay = new AndroidPay(theUser,thePass);
+
+					thisUser.setPaymentInfo(myPay);
+				}
+				else{
+					String theUser = username.getText();
+					String theCard = cardNumber.getText();
+					String theSecret = cardSVN.getText();
+					String theExpire = expire.getText();
+
+					myPay = new CreditCard(theUser,null, theCard, theSecret, theExpire);
+
+					thisUser.setPaymentInfo(myPay);
+
+				}
+				rt.persistUser(thisUser);
+				back2.fire();
 			}
 		});
 
 
 	}
-
+	/**
+	 * This creates all of the owner editing options and functionalities.
+	 * @param User thisUser
+	 * @return none
+	 */
 	public void ownerEditing (User thisUser){
-		SimpleDateFormat fmt = new SimpleDateFormat("mm-dd-yyyy");
+		SimpleDateFormat fmt = new SimpleDateFormat("MM-dd-yyyy");
 		GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance();
-		//cal.setTime();
 		currentName = thisUser.getName();
 		currentUsername = thisUser.getUsername();
 		currentTotPay = thisUser.getPaidToDate().toString(); 
 		currentDateJoin = fmt.format(thisUser.getDateJoined().getTime()); 
 
-		newName.setPromptText(currentName);
-		newUsername.setPromptText(currentUsername);
-		newTotPay.setPromptText(currentTotPay);
-		newDateJoin.setPromptText(currentDateJoin);
+		newName.setText(currentName);
+		newUsername.setText(currentUsername);
+		newTotPay.setText(currentTotPay);
+		newDateJoin.setText(currentDateJoin);
 
-		Label nameL = new Label("Name:");
-		Label usernameL = new Label("Username:");
-		Label totPayL = new Label("Total Paid To Date:");
-		Label dateJoinedL = new Label("Date Joined:");
-		Label editPrompt = new Label("Edit this user's information:");
+
 		editPrompt.setFont(f1);
 
 		editingFields.setLayoutX(150);
 		editingFields.setLayoutY(50);
 
-		editingFields.getChildren().addAll(editPrompt, nameL, newName, usernameL, newUsername, totPayL, newTotPay, dateJoinedL, newDateJoin);
-		pane6.getChildren().addAll(editingFields);
 
 		ownerEdited.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
@@ -300,21 +314,30 @@ public class RoboGUI extends Application{
 				try {
 					cal.setTime(fmt.parse(currentDateJoin));
 					thisUser.setDateJoined(cal); 
-					thisUser.setPaidToDate(Integer.parseInt(currentTotPay)); 
+					thisUser.setPaidToDate((Double.parseDouble(currentTotPay))); 
 					st1.setScene(ownerMenu);
 				} catch (ParseException e1) {
 					dateJoinedL.setTextFill(Color.RED);
 				}
+				rt.persistUser(thisUser);
+				back1.fire();
 			}
 		});
 
 
 	}
 
-	//buying a ticket
+	/**
+	 * This creates the look of an functionality for buying three different types of tickets for three different age
+	 * groups creating nine different prices. 
+	 * @param none
+	 * @return none
+	 */
 	public void buyTicket(){
+		pane7.getChildren().removeAll(vb2);
 		Label eventLabel = new Label("Please select an event type:");
 		VBox eventsBx = new VBox();
+		eventsBx.getChildren().clear();
 		ArrayList<String> optionList = new ArrayList<String>();
 		optionList.add("concert");
 		optionList.add("sport");
@@ -324,11 +347,13 @@ public class RoboGUI extends Application{
 		eventsBx.getChildren().addAll(eventLabel, eventPicker);
 		eventsBx.setLayoutX(150);
 		eventsBx.setLayoutY(25);
-		pane7.getChildren().add(eventsBx);
+		pane7.getChildren().addAll(eventsBx,vb2);
 		eventPicker.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				String chosenOne = (String) eventPicker.getValue();
 				if(chosenOne == "concert"){
+					vb2.getChildren().clear();
+					vb1.getChildren().clear();
 					Label concertPick = new Label("Please select an age group:");
 					ToggleGroup concertAges = new ToggleGroup();
 					RadioButton concertKid = new RadioButton("Child: $75");
@@ -340,9 +365,9 @@ public class RoboGUI extends Application{
 					vb2.getChildren().addAll(concertPick, concertKid, concertAdult, concertSr);
 					vb2.setLayoutX(100);
 					vb2.setLayoutY(100);
-					pane7.getChildren().add(vb2);
 					concertKid.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
+							vb1.getChildren().clear();
 							Label numTixL = new Label("Select the number of child tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
 							amountOpt.add(1);
@@ -362,7 +387,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 75;
+									Double price = 75.0;
 									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
@@ -370,6 +395,7 @@ public class RoboGUI extends Application{
 					});
 					concertAdult.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
+							vb1.getChildren().clear();
 							Label numTixL = new Label("Select the number of adult tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
 							amountOpt.add(1);
@@ -389,7 +415,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 150;
+									Double price = 150.0;
 									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
@@ -397,6 +423,7 @@ public class RoboGUI extends Application{
 					});
 					concertSr.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
+							vb1.getChildren().clear();
 							Label numTixL = new Label("Select the number of Senior tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
 							amountOpt.add(1);
@@ -416,7 +443,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 112;
+									Double price = 112.5;
 									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
@@ -425,20 +452,22 @@ public class RoboGUI extends Application{
 
 				}
 				else if(chosenOne == "sport"){
+					vb2.getChildren().clear();
+					vb1.getChildren().clear();
 					Label sportPick = new Label("Please select an age group:");
 					ToggleGroup sportAges = new ToggleGroup();
 					RadioButton sportKid = new RadioButton("Child: $25");
 					RadioButton sportAdult = new RadioButton("Adult: $50");
-					RadioButton sportSr = new RadioButton("Senior: $37.5");
+					RadioButton sportSr = new RadioButton("Senior: $37.50");
 					sportKid.setToggleGroup(sportAges);
 					sportAdult.setToggleGroup(sportAges);
 					sportSr.setToggleGroup(sportAges);
 					vb2.getChildren().addAll(sportPick, sportKid, sportAdult, sportSr);
 					vb2.setLayoutX(100);
 					vb2.setLayoutY(100);
-					pane7.getChildren().add(vb2);
 					sportKid.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
+							vb1.getChildren().clear();
 							Label numTixL = new Label("Select the number of child tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
 							amountOpt.add(1);
@@ -458,7 +487,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 25;
+									Double price = 25.0;
 									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
@@ -466,6 +495,7 @@ public class RoboGUI extends Application{
 					});
 					sportAdult.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
+							vb1.getChildren().clear();
 							Label numTixL = new Label("Select the number of adult tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
 							amountOpt.add(1);
@@ -485,7 +515,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 50;
+									Double price = 50.0;
 									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
@@ -493,6 +523,7 @@ public class RoboGUI extends Application{
 					});
 					sportSr.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
+							vb1.getChildren().clear();
 							Label numTixL = new Label("Select the number of Senior tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
 							amountOpt.add(1);
@@ -512,7 +543,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 38;
+									Double price = 37.5;
 									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
@@ -521,9 +552,11 @@ public class RoboGUI extends Application{
 
 				}
 				else{
+					vb2.getChildren().clear();
+					vb1.getChildren().clear();
 					Label theaterPick = new Label("Please select an age group:");
 					ToggleGroup theaterAges = new ToggleGroup();
-					RadioButton concertKid = new RadioButton("Child: $62.5");
+					RadioButton concertKid = new RadioButton("Child: $62.50");
 					RadioButton concertAdult = new RadioButton("Adult: $125");
 					RadioButton concertSr = new RadioButton("Senior: $93.75");
 					concertKid.setToggleGroup(theaterAges);
@@ -532,9 +565,9 @@ public class RoboGUI extends Application{
 					vb2.getChildren().addAll(theaterPick, concertKid, concertAdult, concertSr);
 					vb2.setLayoutX(100);
 					vb2.setLayoutY(100);
-					pane7.getChildren().add(vb2);
 					concertKid.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
+							vb1.getChildren().clear();
 							Label numTixL = new Label("Select the number of child tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
 							amountOpt.add(1);
@@ -554,7 +587,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 63;
+									Double price = 62.5;
 									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
@@ -562,6 +595,7 @@ public class RoboGUI extends Application{
 					});
 					concertAdult.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
+							vb1.getChildren().clear();
 							Label numTixL = new Label("Select the number of adult tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
 							amountOpt.add(1);
@@ -581,7 +615,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 125;
+									Double price = 125.0;
 									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
@@ -589,6 +623,7 @@ public class RoboGUI extends Application{
 					});
 					concertSr.setOnAction(new EventHandler<ActionEvent>(){
 						@Override public void handle(ActionEvent e){
+							vb1.getChildren().clear();
 							Label numTixL = new Label("Select the number of Senior tickets you would like.");
 							ArrayList<Integer> amountOpt = new ArrayList<Integer>();
 							amountOpt.add(1);
@@ -608,7 +643,7 @@ public class RoboGUI extends Application{
 							numTix.setOnAction(new EventHandler<ActionEvent>(){
 								@Override public void handle(ActionEvent e){
 									finishPay.setVisible(true);
-									Integer price = 94;
+									Double price = 93.75;
 									rt.chargeFee(numTix.getValue(), price, currentUser);
 								}
 							});
@@ -618,7 +653,12 @@ public class RoboGUI extends Application{
 			}
 		});
 	}
-	// taking in an input file and changing the scene
+	/**
+	 * This takes in the object file and returns the proper scent to set depending on the return value of the RoboTicket
+	 * fileScan function.
+	 * @param none
+	 * @return Scene
+	 */
 	public Scene fileIn(){
 		switch(rt.fileScan()){
 		case 1:
@@ -631,7 +671,11 @@ public class RoboGUI extends Application{
 			return errorPg;
 		}
 	}
-	//putting all the stuff together to look pretty
+	/**
+	 * This formats most of the boxes, labels, and panes in the program. 
+	 * @param none
+	 * @return none
+	 */
 	public void buildGUI (){
 		st1.setTitle("RoboTicket");
 
@@ -668,28 +712,6 @@ public class RoboGUI extends Application{
 		back4.setLayoutX(175);
 		back4.setLayoutY(300);
 
-		//backUser.setLayoutX(70);
-		//backUser.setLayoutY(170);
-
-		//backOwner.setLayoutX(70);
-		//backOwner.setLayoutY(170);
-
-		//backList.setLayoutX(170);
-
-		//addMore.setLayoutX(70);
-		//addMore.setLayoutY(70);
-
-		//listAll.setLayoutX(70);
-		//listAll.setLayoutY(100);
-
-		//ownerEdited.setLayoutX(70);
-		//ownerEdited.setLayoutY(350);
-
-		//closeAccount.setLayoutX(70);
-		//closeAccount.setLayoutX(200);
-
-
-
 		//Box Layouts
 		addInfoBx.setLayoutX(150);
 		addInfoBx.setLayoutY(100);
@@ -709,8 +731,15 @@ public class RoboGUI extends Application{
 		editingBut.setLayoutX(150);
 		editingBut.setLayoutY(350);
 
+		buttonBx.setLayoutX(150);
+		buttonBx.setLayoutY(350);
 
-		//combobox
+		uEditingFields.setLayoutX(150);
+		uEditingFields.setLayoutY(50);
+
+
+
+		//ComboBox Layouts
 		eventPicker.setLayoutX(150);
 		eventPicker.setLayoutY(20);
 
@@ -725,49 +754,57 @@ public class RoboGUI extends Application{
 		editingBut.setSpacing(30);
 		vb2.setSpacing(5);
 
-		//labels
+		//Labels
 		uNameBx.getChildren().addAll(l1, logInName);
 		uPassBx.getChildren().addAll(l2, logInPass);
 		enterNameBx.getChildren().addAll(l3, name);
 		enterLogBx.getChildren().addAll(l5, userName);
 		enterPassBx.getChildren().addAll(l6, secretPass);
 		enterBirthBx.getChildren().addAll(l4, birth);
-		buttonBx.getChildren().addAll(addThis);
+		buttonBx.getChildren().addAll(addThis, back1);
 		addInfoBx.getChildren().addAll(userPromptL, enterNameBx, enterLogBx, enterPassBx, enterBirthBx, buttonBx);
 		logInInfo.getChildren().addAll(line1, line2, uNameBx, uPassBx, logInBut);
 		uMenuBx.getChildren().addAll(uMenuL, editProfile, orderTickets, logOut);
 		oMenuBx.getChildren().addAll(oMenuL, addMore, listAll, logOut2);
 		uEditingBut.getChildren().addAll(userEdited, closeAccount, back2);
 		editingBut.getChildren().addAll(ownerEdited, backList);
+		editingFields.getChildren().addAll(editPrompt, nameL, newName, usernameL, newUsername, totPayL, newTotPay, dateJoinedL, newDateJoin);
+		uEditingFields.getChildren().addAll(editTitle, nameUL, newUName, usernameUL, newLogIn, passwordUL, newPassword, paymentL, payType);
+		vb2.getChildren().add(vb1);
 
 
 
+
+		//Misc Set Up
 		finishPay.setVisible(false);
 		err.setFont(f1);
 		err.setFill(Color.BLACK);
 
 
-		//adding everything to the panes 
+		//Adding to the panes
 		pane1.getChildren().addAll(logInInfo);
-		pane2.getChildren().add(addInfoBx);
+		pane2.getChildren().addAll(addInfoBx, buttonBx,errBx);
 		pane3.getChildren().addAll(uMenuBx);
 		pane4.getChildren().addAll(oMenuBx);
 		pane5.getChildren().addAll(uEditingBut);
-		pane6.getChildren().addAll(editingBut);
+		pane6.getChildren().addAll(editingBut, editingFields);
 		pane7.getChildren().addAll(eventPicker, finishPay, back3);
-		//pane8.getChildren().addAll(back4);
+		pane8.getChildren().addAll(listBx);
 		pane9.getChildren().add(err);
 	}
-
+	/**
+	 * This runs the buildGUI function and starts the entire program. Inside is most of the handlers for the various 
+	 * buttons in the program.
+	 * @param Stage st1
+	 * @return none
+	 */
 	public void start (Stage st1){
 		buildGUI();
-		//Fix the back buttons. they are messed up
-		//can i have a user vs owner back that shows up on multiple panes??
 
 		finishPay.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
 				st1.setScene(userMenu);
-				pane7.getChildren().removeAll(vb1,vb2);
+				pane7.getChildren().removeAll(vb2);
 				finishPay.setVisible(false);
 				vb1.getChildren().clear();
 				vb2.getChildren().clear();
@@ -823,22 +860,21 @@ public class RoboGUI extends Application{
 		});
 		addMore.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
-				buttonBx.getChildren().addAll(back1);
 				st1.setScene(addUser);
 			}
 		});
 		listAll.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
-				Label listL = new Label("ID Number\tUsername\tName\tUser Status\tYears Active\tAmount Paid");
-				VBox listBx = new VBox();
-				listBx.getChildren().addAll(listL, listUs, back4);
+
 				listoUsers = FXCollections.observableArrayList(rt.userList);
+				listUs.refresh();
 				listUs.setItems(listoUsers);
 				listUs.setPrefSize(400, 200);
+				listBx.getChildren().clear();
+				listBx.getChildren().addAll(listL, listUs, back4);
 				listBx.setLayoutX(50);
 				listBx.setLayoutY(50);
 				listBx.setSpacing(10);
-				pane8.getChildren().add(listBx);
 				st1.setScene(listMenu);
 			}
 		});
@@ -869,15 +905,14 @@ public class RoboGUI extends Application{
 				st1.setScene(welcomeSn);
 			}
 		});
-		ownerEdited.setOnAction(new EventHandler<ActionEvent>(){
-			@Override public void handle(ActionEvent e){
-
-			}
-		});
-		//USER VALIDATION ISN'T WORKING!!!
 		addThis.setOnAction(new EventHandler<ActionEvent>(){
 			@Override public void handle(ActionEvent e){
+				errBx.getChildren().clear();
 				Date birthdate = null;
+				SimpleDateFormat format = new SimpleDateFormat("MM-dd-yyyy");
+				errBx.setLayoutX(150);
+				errBx.setLayoutY(50);
+				Boolean validationErr = false;
 
 				String usersName = name.getText();
 				String loginName = userName.getText();
@@ -886,47 +921,35 @@ public class RoboGUI extends Application{
 
 				if(User.isValidName(usersName)!= true){
 					errBx.getChildren().add(invalidName);
-					errBx.setLayoutX(150);
-					errBx.setLayoutY(50);
-					pane2.getChildren().add(errBx);
 					usersName = null;
 					name.clear();
+					validationErr = true;
 				}
-				else{
-					if(User.isValidUsername(loginName)!= true){
-						errBx.getChildren().add(invalidUsername);
-						errBx.setLayoutX(150);
-						errBx.setLayoutY(50);
-						pane2.getChildren().add(errBx);
-						loginName = null;
-						userName.clear();
-					}
-					else{
-						SimpleDateFormat format = new SimpleDateFormat("mm-dd-yyyy");
-						try{
-							birthdate = format.parse(bDay);
-						}
-						catch(ParseException pe){
-							errBx.getChildren().add(dateFormatErr);
-							errBx.setLayoutX(150);
-							errBx.setLayoutY(50);
-							pane2.getChildren().add(errBx);
-							bDay = null;
-							birth.clear();
-						}
-					}
+				if(User.isValidUsername(loginName)!= true){
+					errBx.getChildren().add(invalidUsername);
+					loginName = null;
+					userName.clear();
+					validationErr = true;
 				}
-				currentUser = rt.newUser(loginName, usersName, myPass, birthdate);
-				name.clear();
-				userName.clear();
-				secretPass.clear();
-				birth.clear();
+				try{
+					birthdate = format.parse(bDay);
+				}
+				catch(ParseException pe){
+					errBx.getChildren().add(dateFormatErr);
+					bDay = null;
+					birth.clear();
+					validationErr=true;
+				}
+				if(validationErr!= true){	
+					currentUser = rt.newUser(loginName, usersName, myPass, birthdate);
+					name.clear();
+					userName.clear();
+					secretPass.clear();
+					birth.clear();
 
-				st1.setScene(ownerMenu);
-				//event
+					st1.setScene(ownerMenu);
+				}
 			}
-
-			//main
 		});
 
 		logInBut.setOnAction(new EventHandler<ActionEvent>(){
@@ -960,9 +983,19 @@ public class RoboGUI extends Application{
 		listoUsers = FXCollections.observableArrayList(rt.userList);
 		st1.show();
 	}
+	/**
+	 * This function runs when the user exits the program to ensure data is saved and that the program ends gracefully.
+	 * @param none
+	 * @return none
+	 */
 	public void stop () {
 		rt.endGracefully(currentUser);
 	}
+	/**
+	 * This is required for the program to run in Eclipse.
+	 * @param String [] args
+	 * @return none
+	 */
 	public static void main (String[] args){
 		Application.launch(RoboGUI.class,args);
 	}
