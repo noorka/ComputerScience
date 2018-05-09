@@ -91,7 +91,8 @@ void RBTree::fix(Node *&root, Node *&dataptr){
                     dad = dataptr->parent;
                 }
                 rotateRight(root, grandDad);
-                swap(grandDad->color, dad->color);
+                grandDad->color = RED;
+                dad->color = BLACK;
                 dataptr = dad;
             }
         }
@@ -110,7 +111,8 @@ void RBTree::fix(Node *&root, Node *&dataptr){
                     dad = dataptr->parent;
                 }
                 rotateLeft(root, grandDad);
-                swap(grandDad->color, dad->color);
+                grandDad->color = RED;
+                dad->color = BLACK;
                 dataptr = dad;
             }
         }
@@ -180,6 +182,7 @@ void RBTree::rotateRight(Node *&root, Node *&pt){
 }
 void RBTree::insert(int key){
     Node *dataNode = new Node(key);
+    
     root = BSTinsert(root, dataNode);
     fix(root, dataNode);
     
