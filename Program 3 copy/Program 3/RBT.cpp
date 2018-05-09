@@ -20,7 +20,7 @@ struct Node{
     Node *left;
     Node *right;
     Node *parent;
-    bool color;
+    bool color = RED;
     int key;
     
     
@@ -56,6 +56,8 @@ public:
     Node* find (int key);
     void Dump();
     void Dump(Node *node, int tabs);
+    int numBk(Node *leaf, int amt);
+    void numBk(int amt);
     
 protected:
     Node *root;
@@ -63,6 +65,19 @@ protected:
     void rotateRight(Node *&, Node *&);
     void fix(Node *&, Node *&);
 };
+void RBTree::numBk(int amt){
+    numBk(root, amt);
+}
+
+int RBTree::numBk(Node *leaf, int amt){
+    if(leaf == nullptr){
+        return amt;
+    }
+    if(leaf->color ==BLACK) amt++;
+    numBk(leaf->left, amt);
+    numBk(leaf->right, amt);
+    return 0;
+}
 void RBTree::swap(bool color1, bool color2){
     bool temp;
     temp = color1;
@@ -193,13 +208,13 @@ void RBTree::Dump(){
 void RBTree::Dump(Node *node, int tabs)
 {if (!node)
 {return;}
-    Dump(node->left, tabs + 1);
+    Dump(node->right, tabs + 1);
     for (int i = 0; i < tabs; ++i)
     {
         cout << "\t\t";
     }
-    cout << node->key << " " << (node->color ? "B" : "R") << endl;
-    Dump(node->right, tabs + 1);
+    cout << node->key << " " << (node->color ? "R" : "B") << endl;
+    Dump(node->left, tabs + 1);
 }
 int main(){
     RBTree tree;
@@ -210,8 +225,9 @@ int main(){
     tree.insert(7);
     tree.insert(11);
     //tree.find(22);
+    tree.numBk(0);
     tree.Dump();
-    cout << "Found: " << tree.find(22)->key << (tree.find(22)->color ? "B" : "R") << endl;
+    //cout << "Found: " << tree.find(22)->key << (tree.find(22)->color ? "R" : "B") << endl;
 }
 //rotateLeft
 //rotateRight
