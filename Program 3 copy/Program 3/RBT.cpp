@@ -15,22 +15,20 @@
 
 using namespace std;
 enum Color {BLACK, RED};
-template <class T>
+template <typename T>
 struct Node{
-    Node<T> *left;
-    Node<T> *right;
-    Node<T> *parent;
-    Node<T> *root;
+    Node *left;
+    Node *right;
+    Node *parent;
     bool color = RED;
     T key;
-    
     
     Node(T key){
         this->key = key;
         left = right = parent = nullptr;
     }
 };
-template <typename T>
+template <class T>
 Node<T>* BSTinsert(Node<T> *root, Node<T> *dataptr){
     if(root == nullptr){
         return dataptr;
@@ -46,49 +44,22 @@ Node<T>* BSTinsert(Node<T> *root, Node<T> *dataptr){
     return root;
 }
 
+template <typename T>
 class RBTree {
 protected:
-    //Node<T> *root; //why
-    template <typename T>
-    void rotateLeft(Node<T> *&, Node<T> *&);
-    template <typename T>
-    void rotateRight(Node<T> *&, Node<T> *&);
-    template <typename T>
-    void fix(Node<T> *&, Node<T> *&);
-    
+    Node<T> *root;
+
 public:
-    template <typename T>
-    RBTree(){root = nullptr;};
-    //~RBTree();
-    void swap(bool color1, bool color2);
-    template <typename T>
-    void insert(T key);
-    template <typename T>
-    Node<T>* find (int key, Node<T>* root);
-    template <typename T>
-    Node<T>* find (int key);
-    void dump();
-    template <typename T>
-    void dump(Node<T> *node, int tabs);
-    template <typename T>
-    int numBk(Node<T>* root);
-    //void numBk(int amt);
-    //int blackHeight(Node *root);
-    template <typename T>
-    Node<T>* getRoot();
+    RBTree() { root = NULL; }
     
-};
-/*void RBTree::numBk(int amt){
-    numBk(root, amt);
-}
-*/
-template <typename T>
-int RBTree::numBk(Node<T>* root){
-    int leftBkHt = numBk(root->left);
-    int rightBkHt = numBk(root->right);
+int numBk(Node<T>* root){
     if(root == nullptr){
         return 1;
     }
+    
+    int leftBkHt = numBk(root->left);
+    int rightBkHt = numBk(root->right);
+
     if(leftBkHt == 0) return leftBkHt;
     if(rightBkHt == 0) return rightBkHt;
     if(leftBkHt != rightBkHt) return 0;
@@ -96,8 +67,8 @@ int RBTree::numBk(Node<T>* root){
         return leftBkHt + rightBkHt;
     }
 }
-template <typename T>
-Node<T>* RBTree::getRoot(){
+
+Node<T>* getRoot(){
     return root;
 }
 /*int blackHeight(Node *root){
@@ -109,8 +80,8 @@ Node<T>* RBTree::getRoot(){
     if (leftBlackHeight != rightBlackHeight) return 0;
     else return leftBlackHeight + (root->color ? 1 : 0);
 }*/
-template <typename T>
-void RBTree::fix(Node<T> *&root, Node<T> *&dataptr){
+
+void fix(Node<T> *&root, Node<T> *&dataptr){
     Node<T> *dad;
     Node<T> *grandDad;
     while((root!= dataptr) && (dataptr->color != BLACK) && (dataptr->parent->color != BLACK)){
@@ -160,8 +131,8 @@ void RBTree::fix(Node<T> *&root, Node<T> *&dataptr){
     }
     root->color = BLACK;
 }
-template <typename T>
-Node<T>* RBTree::find(int key, Node<T>* root){
+
+Node<T>* find(T key, Node<T>* root){
     if(root == nullptr){
         return nullptr;
     }
@@ -173,12 +144,12 @@ Node<T>* RBTree::find(int key, Node<T>* root){
     }
     return find(key, root->right);
 }
-template <typename T>
-Node<T>* RBTree::find(int key){
+
+Node<T>* find(T key){
     return find(key, root);
 }
-template <typename T>
-void RBTree::rotateLeft(Node<T> *&root, Node<T> *&pt){
+
+void rotateLeft(Node<T> *&root, Node<T> *&pt){
     Node<T> *pt_right = pt->right;
     pt->right = pt_right->left;
     
@@ -199,8 +170,8 @@ void RBTree::rotateLeft(Node<T> *&root, Node<T> *&pt){
     pt_right->left = pt;
     pt->parent = pt_right;
 }
-template <typename T>
-void RBTree::rotateRight(Node<T> *&root, Node<T> *&pt){
+
+void rotateRight(Node<T> *&root, Node<T> *&pt){
     Node<T> *pt_left = pt->left;
     pt->left = pt_left->right;
     
@@ -221,43 +192,65 @@ void RBTree::rotateRight(Node<T> *&root, Node<T> *&pt){
     pt_left->right = pt;
     pt->parent = pt_left;
 }
-template <typename T>
-void RBTree::insert(T key){
+
+void insert(T key){
     Node<T> *dataNode = new Node<T>(key);
     
     root = BSTinsert(root, dataNode);
     fix(root, dataNode);
     
 }
-void RBTree::dump(){
+void dump(){
     dump(root, 1);
 }
-template <typename T>
-void RBTree::dump(Node<T> *node, int tabs)
-{if (!node)
-{return;}
+
+void dump(Node<T> *node, int tabs) {
+    if (!node){
+        return;
+    }
     dump(node->right, tabs + 1);
     for (int i = 0; i < tabs; ++i)
     {
         cout << "\t\t";
     }
-    cout << node->key << " " << (node->color ? "R" : "B") << endl;
+    cout << node->key << " - " << (node->color ? "Red" : "Blk") << endl;
     dump(node->left, tabs + 1);
 }
+
+};
+
 int main(){
-   /* RBTree tree;
-    //Node* treeRoot;
+    RBTree<int> tree;
     tree.insert(12);
     tree.insert(22);
     tree.insert(7);
     tree.insert(11);
-    //tree.find(22);
-    //tree.numBk(0);
+    tree.insert(32);
+    tree.find(22);
     tree.dump();
+  
     int trr = tree.numBk(tree.getRoot());
-    cout << trr;
-    //cout << "Found: " << tree.find(22)->key << (tree.find(22)->color ? "R" : "B") << endl;*/
+    cout << "Depth: " << trr << endl;
+    cout << "Found: " << tree.find(22)->key << " - " <<  (tree.find(22)->color ? "Red" : "Blk") << endl;
+    
+    cout << "-------------------------------------------------------" << endl;
+    
+    RBTree<string> tree1;
+    tree1.insert("i");
+    tree1.insert("hope");
+    tree1.insert("that");
+    tree1.insert("makes");
+    tree1.insert("at");
+    tree1.insert("least");
+    tree1.insert("a");
+    tree1.insert("blah");
+    
+    tree1.dump();
+    
+    trr = tree1.numBk(tree1.getRoot());
+    cout << "Depth: " << trr << endl;
+    
+    cout << "Found: " << tree1.find("blah")->key << " - " << (tree1.find("blah")->color ? "Red" : "Blk") << endl;
 }
-
 
 #endif /* RBT_hpp */
