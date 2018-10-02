@@ -1,0 +1,78 @@
+#import
+#def unscrambleMsg(key, cypherTbl):
+
+
+def scramble():
+    colList = [0,1, 2, 3, 4, 5, 6, 7, 8, 9]
+    nums = input("Please enter any quantity of two digit numbers to scramble your message")
+    eachNum = nums.split()
+    for dubNum in eachNum:
+        i1 = int(dubNum[0])
+        i2 = int(dubNum[1])
+
+        sw1 = colList[i1]
+        #sw2 = colList[i2]
+        colList[i1] = colList[i2]
+        colList[i2] = sw1
+
+    return colList
+def scrambleMsg(key, cypherTbl):
+    cypherTxt = []
+    bitStr = ""
+    charOut = ""
+    for number in key:
+        piece = cypherTbl[number]
+        cypherTxt.append(piece)
+
+    for col in cypherTxt:
+        for bit in col:
+            bitStr = bitStr + bit
+    for index in range(0,len(bitStr)):
+        charOut += chr(int(bitStr[index:index+8],2)) # check this chr int stuff. not ascii
+    return charOut
+
+choice = 'decrypt'
+#choice =input("Would you like to encrypt or decrypt a file? ")
+if choice == "encrypt":
+    decFile = "this.txt"
+    #decFile = input("Please enter the name of the file you would like to encrypt. ")
+    inFile = open(decFile, "r")
+    encFile = decFile.split(".")[0] + ".enc"
+    outFile = open(encFile, "w")
+    msg = inFile.readlines()
+    outList= [[],[],[],[],[],[],[],[],[],[]]
+    ind = 0
+    for line in msg:
+        for letter in line:
+            bitLetter = format(ord(letter), '08b')
+            for bit in bitLetter:
+                col = ind % 10
+                outList[col].append(bit)
+                ind += 1
+    key = scramble()
+    cypherTxt = scrambleMsg(key, outList)
+    outFile.write(cypherTxt)
+    outFile.close()
+    inFile.close()
+
+elif choice == "decrypt":
+    encFile = "this.enc"
+    #encFile = input("Please enter the name of the file you would like to decrypt")
+    infile = open(encFile, "r")
+    decFile = encFile.split(".")[0] +".dec"
+    outFlie = open(decFile, "w")
+    msg = infile.readlines()
+
+    outList = [[], [], [], [], [], [], [], [], [], []]
+    ind = 0
+
+    for line in msg:
+        for letter in line:
+            bitLetter = format(ord(letter), '08b')
+            for bit in bitLetter:
+                col = ind % 10
+                outList[col].append(bit)
+                ind += 1
+    print(outList)
+else:
+    choice = input("Input error, please try again. Would you like to encrypt or decrypt")
