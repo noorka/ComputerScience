@@ -1,25 +1,31 @@
 #import
-#def unscrambleMsg(key, cypherTbl):
+def unscrambleMsg(nums, cypherTbl, colList):
+    eachNum = nums.split()
+    for num in eachNum:
+        revNums = []
+        revNums.insert(0, num)
+    keyStr = "".join(revNums)
+    revKey = scramble(keyStr, colList)
+    return scrambleMsg(revKey, cypherTbl)
 
-
-def scramble():
-    colList = [0,1, 2, 3, 4, 5, 6, 7, 8, 9]
-    nums = input("Please enter any quantity of two digit numbers to scramble your message")
+# This function scrambles up the 0-9 list so that the message can be encrypted or decrypted with that key.
+def scramble(nums, colList):
     eachNum = nums.split()
     for dubNum in eachNum:
         i1 = int(dubNum[0])
         i2 = int(dubNum[1])
-
         sw1 = colList[i1]
-        #sw2 = colList[i2]
         colList[i1] = colList[i2]
         colList[i2] = sw1
 
     return colList
+# This function scrambles the message that has already be converted to bit and placed in the array based on the key
+# created in the previous function
 def scrambleMsg(key, cypherTbl):
     cypherTxt = []
     bitStr = ""
     charOut = ""
+    index = 0
     for number in key:
         piece = cypherTbl[number]
         cypherTxt.append(piece)
@@ -27,21 +33,26 @@ def scrambleMsg(key, cypherTbl):
     for col in cypherTxt:
         for bit in col:
             bitStr = bitStr + bit
-    for index in range(0,len(bitStr)):
-        charOut += chr(int(bitStr[index:index+8],2)) # check this chr int stuff. not ascii
+    while index < len(bitStr):
+        charOut += chr(int(bitStr[index:index+8], 2))
+        index += 8
     return charOut
-
-choice = 'decrypt'
-#choice =input("Would you like to encrypt or decrypt a file? ")
+# This is where the main processing of the program happens. The user chooses to encrypt or decrypt their message, enters
+# in their file name, and returns the properly en/decrypted file
+#choice = 'encrypt'
+choice =input("Would you like to encrypt or decrypt a file? ")
 if choice == "encrypt":
     decFile = "this.txt"
     #decFile = input("Please enter the name of the file you would like to encrypt. ")
     inFile = open(decFile, "r")
-    encFile = decFile.split(".")[0] + ".enc"
+    encFile = decFile.split(".")[0] + ".enc"  # creating the encryption file
     outFile = open(encFile, "w")
     msg = inFile.readlines()
+    colList = [0,1, 2, 3, 4, 5, 6, 7, 8, 9]
+    nums = input("Please enter any quantity of two digit numbers to scramble your message: ")
     outList= [[],[],[],[],[],[],[],[],[],[]]
     ind = 0
+    #
     for line in msg:
         for letter in line:
             bitLetter = format(ord(letter), '08b')
@@ -49,7 +60,7 @@ if choice == "encrypt":
                 col = ind % 10
                 outList[col].append(bit)
                 ind += 1
-    key = scramble()
+    key = scramble(nums, colList)
     cypherTxt = scrambleMsg(key, outList)
     outFile.write(cypherTxt)
     outFile.close()
@@ -61,6 +72,8 @@ elif choice == "decrypt":
     infile = open(encFile, "r")
     decFile = encFile.split(".")[0] +".dec"
     outFlie = open(decFile, "w")
+    colList = [0,1, 2, 3, 4, 5, 6, 7, 8, 9]
+    nums = input("Please enter the list of two digit numbers you used to encrypt your message: ")
     msg = infile.readlines()
 
     outList = [[], [], [], [], [], [], [], [], [], []]
@@ -73,6 +86,8 @@ elif choice == "decrypt":
                 col = ind % 10
                 outList[col].append(bit)
                 ind += 1
-    print(outList)
+
+    decodedMsg = unscrambleMsg(nums, outList, colList)
+    print(decodedMsg)
 else:
-    choice = input("Input error, please try again. Would you like to encrypt or decrypt")
+    choice = input("Input error, please try again. Would you like to encrypt or decrypt: ")
