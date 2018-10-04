@@ -1,12 +1,32 @@
-#import
-def unscrambleMsg(nums, cypherTbl, colList):
+import math
+def unscrambleMsg(nums, cypherTbl, colList, tblRow):
     eachNum = nums.split()
+    revNums = []  # this was causing an issue because more than one number wasn't saving into it
     for num in eachNum:
-        revNums = []
         revNums.insert(0, num)
-    keyStr = "".join(revNums)
+    keyStr = " ".join(revNums)
     revKey = scramble(keyStr, colList)
-    return scrambleMsg(revKey, cypherTbl)
+    cypherTxt = []
+    bitStr = ""
+    charOut = ""
+    index = 0
+    rows = []
+    for i in range(0, tblRow):
+        rows.append([])
+    for number in revKey:
+        piece = cypherTbl[number]
+        cypherTxt.append(piece)
+    for col in cypherTxt:
+        row = 0
+        for bit in col:
+            rows[row].append(bit)
+            row += 1
+    for row in rows:
+        bitStr = bitStr + ''.join(row)
+    while index < len(bitStr):
+        charOut += chr(int(bitStr[index:index + 8], 2))
+        index += 8
+    return charOut
 
 # This function scrambles up the 0-9 list so that the message can be encrypted or decrypted with that key.
 def scramble(nums, colList):
@@ -40,7 +60,8 @@ def scrambleMsg(key, cypherTbl):
 # This is where the main processing of the program happens. The user chooses to encrypt or decrypt their message, enters
 # in their file name, and returns the properly en/decrypted file
 #choice = 'encrypt'
-choice =input("Would you like to encrypt or decrypt a file? ")
+print("Encrypt/Decrypt Message by Anna Kroon")
+choice = input("Would you like to encrypt or decrypt a file? ")
 if choice == "encrypt":
     decFile = "this.txt"
     #decFile = input("Please enter the name of the file you would like to encrypt. ")
@@ -65,29 +86,50 @@ if choice == "encrypt":
     outFile.write(cypherTxt)
     outFile.close()
     inFile.close()
+    print("Thank you for using Encrypt/Decrypt Message by Anna Kroon.")
 
 elif choice == "decrypt":
     encFile = "this.enc"
     #encFile = input("Please enter the name of the file you would like to decrypt")
-    infile = open(encFile, "r")
+    inFile = open(encFile, "r")
     decFile = encFile.split(".")[0] +".dec"
-    outFlie = open(decFile, "w")
+    outFile = open(decFile, "w")
     colList = [0,1, 2, 3, 4, 5, 6, 7, 8, 9]
     nums = input("Please enter the list of two digit numbers you used to encrypt your message: ")
-    msg = infile.readlines()
+    msg = inFile.readlines()
 
     outList = [[], [], [], [], [], [], [], [], [], []]
     ind = 0
+    encryptStr = ""
 
     for line in msg:
         for letter in line:
-            bitLetter = format(ord(letter), '08b')
-            for bit in bitLetter:
-                col = ind % 10
-                outList[col].append(bit)
-                ind += 1
+            bitStr = format(ord(letter), '08b')
+            encryptStr = encryptStr + bitStr
 
-    decodedMsg = unscrambleMsg(nums, outList, colList)
+    numrows = len(encryptStr) / 10
+    numrows = math.ceil(numrows)
+
+    fullcols = len(encryptStr) % 10
+    if fullcols == 0:
+        fullcols = 10
+    begslice = 0
+
+    for index in range(0, 10):
+        if index >= fullcols:
+            lenslice = numrows - 1
+        else:
+            lenslice = numrows
+
+        colSlice = encryptStr[begslice:begslice + lenslice]
+        begslice += lenslice
+
+        outList[index] = list(colSlice)
+    decodedMsg = unscrambleMsg(nums, outList, colList, numrows)
+    outFile.write(decodedMsg)
+    outFile.close()
+    inFile.close()
+    print("Thank you for using Encrypt/Decrypt Message by Anna Kroon.")
     print(decodedMsg)
 else:
     choice = input("Input error, please try again. Would you like to encrypt or decrypt: ")
