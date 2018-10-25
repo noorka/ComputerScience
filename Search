@@ -1,0 +1,104 @@
+
+fileName = input("Please input at .txt file:")
+inFile = None
+while inFile == None:
+    try:
+        inFile = open(fileName, "r")
+    except IOError:
+        print("This is not a valid file.")
+        fileName = input("Please try again. Input at .txt file: ")
+
+keyBlock = input("Please enter one to four keywords separated by spaces: ")
+keywords = keyBlock.split()
+while len(keywords) > 4:
+    print("You have entered too many keys. ")
+    keyBlock = input("Please enter one to four keywords separated by spaces: ")
+    keywords = keyBlock.split()
+
+text = inFile.readlines()
+D = {}
+occur = 0
+lineNum = 0
+pageNum = 1
+for line in text:
+    lineNum = lineNum + 1
+    pageRem = lineNum % 25
+    if pageRem == 0:
+        pageNum = pageNum + 1
+    lowLine = line.lower()
+    lineWord = lowLine.split()
+    for word in lineWord:
+        cleanWord = ''.join(ch for ch in word if ch.isalpha())
+        if len(cleanWord) > 3:
+            if D.get(cleanWord):
+                D[cleanWord][0] = D[cleanWord][0] + 1
+                D[cleanWord][1].add(lineNum)
+                D[cleanWord][2].add(pageNum)
+            else:
+                D[cleanWord] = [1, {lineNum}, {pageNum}]
+
+sortedOccur = sorted(D, key=lambda x: D[x][0])
+lengthD = len(D)
+tenP = lengthD // 10
+count = 0
+for i in sortedOccur:
+    del D[i]
+    count += 1
+    if count > tenP:
+        break
+
+rank = {}
+for word in keywords:
+    if word in D.keys():
+        for page in D[word][2]:
+            if rank.get(page):
+                rank[page] = rank[page] + 1
+            else:
+                rank[page] = 1
+
+for index in range(0,len(keywords)):
+    for indexA in range(index + 1, len(keywords)):
+        subPage = D[keywords[index]][2] & D[keywords[indexA]][2]
+        for page in subPage:
+            rank[page] = rank[page] + 2
+            for indexB in range(indexA + 1, len(keywords)):
+                subPageB = subPage & D[keywords[indexB]][2]
+                for pageB in subPageB:
+                    rank[pageB] = rank[pageB] + 3
+                    for indexC in range(indexB + 1, len(keywords)):
+                        subPageC = subPageB & D[keywords[indexC]][2]
+                        for pageC in subPageC:
+                            rank[pageC] = rank[pageC] + 4
+
+
+for index in range(0, len(keywords)):
+    for indexZ in range(index +1, len(keywords)):
+        lineZ = D[keywords[index]][1] & D[keywords[indexZ]][1]
+        for line in lineZ:
+            pg = line // 25
+            if pg > 0:
+                rank[pg] = rank[pg] + 5
+            else:
+                rank[1] = rank[1] + 5
+            for indexY in range(indexZ +1, len(keywords)):
+                lineY = D[keywords[indexZ]][1] & D[keywords[indexY]][1]
+                for line1 in lineY:
+                    pg = line1 // 25
+                    if pg > 0:
+                        rank[pg] = rank[pg] + 6
+                    else:
+                        rank[1] = rank[1] + 6
+                    for indexW in range(indexY + 1, len(keywords)):
+                        lineW = D[keywords[indexY]][1] & D[keywords[indexW]][1]
+                        for line2 in lineW:
+                            pg = line2 // 25
+                            if pg > 0:
+                                rank[pg] = rank[pg] + 7
+                            else:
+                                rank[1] = rank[1] + 7
+
+for key in rank:
+    print("{} : {}".format(key, rank[key]))
+
+
+
