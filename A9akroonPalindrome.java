@@ -36,6 +36,7 @@ public class A9akroonPalindrome {
 			stringCount++;
 			
 			while (n != input.length()) {
+				input = input.toLowerCase();
 				char thisChar = input.charAt(n);
 				boolean good = true;
 				for (int c = 0; c < SPECIAL_CHARACTERS.length; c++) {
